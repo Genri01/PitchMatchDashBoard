@@ -1,7 +1,9 @@
+export type SearchFilterFunc = (el: any) => any;
+
 export const searchFilter = (
   searchTerm: string,
   items: Array<any>,
-  searchProps: Array<string> | Array<(el: any) => any>
+  searchProps: Array<string> | Array<SearchFilterFunc>
 ) => {
   const strTranform = (str: string) => str?.toLocaleLowerCase().trim();
 

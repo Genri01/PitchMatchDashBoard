@@ -3,7 +3,15 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { Layout } from "./components";
 import { Routes } from "./constants";
 import { UserContext } from "./contexts";
-import { CreateFieldPage, FieldPage, FieldsPage, LoginPage } from "./pages";
+import {
+  CreateFieldPage,
+  FieldPage,
+  FieldsPage,
+  LoginPage,
+  UsersPage,
+  EditFieldPage,
+} from "./pages";
+import { UserPage } from "./pages/user/UserPage";
 
 export const AppRoutes = () => {
   const { me, loading } = useContext(UserContext);
@@ -16,8 +24,11 @@ export const AppRoutes = () => {
         <Layout>
           <Switch>
             <Route path={Routes.CREATE_FIELD} component={CreateFieldPage} />
+            <Route path={Routes.EDIT_FIELD} component={EditFieldPage} />
             <Route path={Routes.FIELD} component={FieldPage} exact />
             <Route path={Routes.FIELDS} component={FieldsPage} />
+            <Route path={Routes.USERS} component={UsersPage} />
+            <Route path={Routes.USER} component={UserPage} />
             <Route render={() => <Redirect to={Routes.FIELDS} />} />
           </Switch>
         </Layout>

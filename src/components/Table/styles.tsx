@@ -1,10 +1,4 @@
-import {
-  makeStyles,
-  Theme,
-  createStyles,
-  lighten,
-  fade,
-} from "@material-ui/core";
+import { makeStyles, Theme, createStyles, lighten } from "@material-ui/core";
 
 export const useToolbarStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -55,41 +49,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       top: 20,
       width: 1,
     },
-    search: {
-      position: "relative",
-      borderRadius: theme.shape.borderRadius,
-      backgroundColor: fade(theme.palette.primary.light, 0.15),
-      "&:hover": {
-        backgroundColor: fade(theme.palette.primary.light, 0.25),
-      },
-      marginRight: theme.spacing(2),
-      marginLeft: 0,
-      width: "100%",
-      [theme.breakpoints.up("sm")]: {
-        marginLeft: theme.spacing(3),
-        width: "auto",
-      },
+    mainSearchWrapper: {
+      marginRight: theme.spacing(1),
     },
-    searchIcon: {
-      padding: theme.spacing(0, 2),
-      height: "100%",
-      position: "absolute",
-      pointerEvents: "none",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    inputRoot: {
-      color: "inherit",
-    },
-    inputInput: {
-      padding: theme.spacing(1, 1, 1, 0),
-      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("md")]: {
-        width: "20ch",
-      },
+    profilePic: {
+      height: "40px",
+      width: "40px",
+      borderRadius: "50%",
     },
   })
 );

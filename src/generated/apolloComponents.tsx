@@ -29,6 +29,7 @@ export type Query = {
   getUsers?: Maybe<UserProfileList>;
   getUser?: Maybe<UserProfile>;
   getUserStats: UserStats;
+  getUsersStats?: Maybe<UserStatsList>;
   getComplaintCategories?: Maybe<Array<Maybe<ComplaintCategory>>>;
   getComplaints?: Maybe<ComplaintList>;
   getWallPosts?: Maybe<WallPostList>;
@@ -78,6 +79,11 @@ export type QueryGetUserArgs = {
 
 export type QueryGetUserStatsArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryGetUsersStatsArgs = {
+  pagination?: Maybe<Pagination>;
 };
 
 
@@ -245,6 +251,7 @@ export type ChatMember = {
 export type UserProfile = {
   __typename?: 'UserProfile';
   id: Scalars['ID'];
+  role?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   fullName?: Maybe<Scalars['String']>;
@@ -327,6 +334,7 @@ export type Place = {
   ratingTotal?: Maybe<Scalars['Int']>;
   userRating?: Maybe<PlaceRating>;
   commercial?: Maybe<Scalars['Boolean']>;
+  point?: Maybe<ShortGeoPoint>;
 };
 
 export type PlaceRating = {
@@ -335,6 +343,15 @@ export type PlaceRating = {
   placeId: Scalars['ID'];
   rating?: Maybe<Scalars['Int']>;
 };
+
+export type ShortGeoPoint = {
+  __typename?: 'ShortGeoPoint';
+  id: Scalars['ID'];
+  type?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['GeoJSONCoordinates']>;
+  message?: Maybe<Scalars['String']>;
+};
+
 
 export type GameMember = {
   __typename?: 'GameMember';
@@ -408,6 +425,13 @@ export type UserStats = {
   following?: Maybe<Scalars['Int']>;
   attendGames?: Maybe<Scalars['Int']>;
   orgGames?: Maybe<Scalars['Int']>;
+  user?: Maybe<UserProfile>;
+};
+
+export type UserStatsList = {
+  __typename?: 'UserStatsList';
+  count: Scalars['Int'];
+  rows: Array<UserStats>;
 };
 
 export type ComplaintCategory = {
@@ -485,7 +509,6 @@ export type GeoPointsFilter = {
   latitudeDelta: Scalars['Float'];
   longitudeDelta: Scalars['Float'];
 };
-
 
 export type GeoPointList = {
   __typename?: 'GeoPointList';
@@ -1024,12 +1047,13 @@ export type Sort = {
   direction?: Maybe<SortDirection>;
 };
 
-export type CreateFieldMutationVariables = Exact<{
+export type UpsertFieldMutationVariables = Exact<{
+  id?: Maybe<Scalars['ID']>;
   input: PlaceInput;
 }>;
 
 
-export type CreateFieldMutation = (
+export type UpsertFieldMutation = (
   { __typename?: 'Mutation' }
   & { upsertPlace: (
     { __typename?: 'Place' }
@@ -1046,7 +1070,14 @@ export type FieldQuery = (
   { __typename?: 'Query' }
   & { getPlace?: Maybe<(
     { __typename?: 'Place' }
-    & Pick<Place, 'id' | 'name' | 'description' | 'address' | 'roof' | 'price' | 'phone' | 'email' | 'size'>
+    & Pick<Place, 'id' | 'name' | 'description' | 'address' | 'roof' | 'price' | 'phone' | 'email' | 'size' | 'fromTime' | 'toTime'>
+    & { point?: Maybe<(
+      { __typename?: 'ShortGeoPoint' }
+      & Pick<ShortGeoPoint, 'location'>
+    )>, files?: Maybe<Array<Maybe<(
+      { __typename?: 'File' }
+      & Pick<File, 'url'>
+    )>>> }
   )> }
 );
 
@@ -1112,6 +1143,49 @@ export type MeQuery = (
   ) }
 );
 
+export type UserStatsQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type UserStatsQuery = (
+  { __typename?: 'Query' }
+  & { getUserStats: (
+    { __typename?: 'UserStats' }
+    & Pick<UserStats, 'userId' | 'attendGames' | 'orgGames'>
+    & { user?: Maybe<(
+      { __typename?: 'UserProfile' }
+      & Pick<UserProfile, 'firstName' | 'lastName' | 'birthday' | 'gender' | 'prefferedPosition' | 'bannedAt' | 'banReason' | 'ratingScore' | 'ratingTotal' | 'attendyScore' | 'attendyTotal' | 'checkinRating' | 'commercialFrom'>
+      & { avatar?: Maybe<(
+        { __typename?: 'File' }
+        & Pick<File, 'url'>
+      )> }
+    )> }
+  ) }
+);
+
+export type UsersStatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type UsersStatsQuery = (
+  { __typename?: 'Query' }
+  & { getUsersStats?: Maybe<(
+    { __typename?: 'UserStatsList' }
+    & { rows: Array<(
+      { __typename?: 'UserStats' }
+      & Pick<UserStats, 'userId' | 'attendGames' | 'orgGames'>
+      & { user?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, 'firstName' | 'lastName' | 'birthday' | 'gender'>
+        & { avatar?: Maybe<(
+          { __typename?: 'File' }
+          & Pick<File, 'url'>
+        )> }
+      )> }
+    )> }
+  )> }
+);
+
 export const RegUserFragmentDoc = gql`
     fragment RegUser on User {
   __typename
@@ -1126,38 +1200,39 @@ export const UserFragmentDoc = gql`
   commercialFrom
 }
     `;
-export const CreateFieldDocument = gql`
-    mutation CreateField($input: PlaceInput!) {
-  upsertPlace(input: $input) {
+export const UpsertFieldDocument = gql`
+    mutation UpsertField($id: ID, $input: PlaceInput!) {
+  upsertPlace(id: $id, input: $input) {
     id
   }
 }
     `;
-export type CreateFieldMutationFn = Apollo.MutationFunction<CreateFieldMutation, CreateFieldMutationVariables>;
+export type UpsertFieldMutationFn = Apollo.MutationFunction<UpsertFieldMutation, UpsertFieldMutationVariables>;
 
 /**
- * __useCreateFieldMutation__
+ * __useUpsertFieldMutation__
  *
- * To run a mutation, you first call `useCreateFieldMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateFieldMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpsertFieldMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertFieldMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createFieldMutation, { data, loading, error }] = useCreateFieldMutation({
+ * const [upsertFieldMutation, { data, loading, error }] = useUpsertFieldMutation({
  *   variables: {
+ *      id: // value for 'id'
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useCreateFieldMutation(baseOptions?: Apollo.MutationHookOptions<CreateFieldMutation, CreateFieldMutationVariables>) {
-        return Apollo.useMutation<CreateFieldMutation, CreateFieldMutationVariables>(CreateFieldDocument, baseOptions);
+export function useUpsertFieldMutation(baseOptions?: Apollo.MutationHookOptions<UpsertFieldMutation, UpsertFieldMutationVariables>) {
+        return Apollo.useMutation<UpsertFieldMutation, UpsertFieldMutationVariables>(UpsertFieldDocument, baseOptions);
       }
-export type CreateFieldMutationHookResult = ReturnType<typeof useCreateFieldMutation>;
-export type CreateFieldMutationResult = Apollo.MutationResult<CreateFieldMutation>;
-export type CreateFieldMutationOptions = Apollo.BaseMutationOptions<CreateFieldMutation, CreateFieldMutationVariables>;
+export type UpsertFieldMutationHookResult = ReturnType<typeof useUpsertFieldMutation>;
+export type UpsertFieldMutationResult = Apollo.MutationResult<UpsertFieldMutation>;
+export type UpsertFieldMutationOptions = Apollo.BaseMutationOptions<UpsertFieldMutation, UpsertFieldMutationVariables>;
 export const FieldDocument = gql`
     query Field($id: ID!) {
   getPlace(id: $id) {
@@ -1170,6 +1245,14 @@ export const FieldDocument = gql`
     phone
     email
     size
+    fromTime
+    toTime
+    point {
+      location
+    }
+    files {
+      url
+    }
   }
 }
     `;
@@ -1335,3 +1418,101 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const UserStatsDocument = gql`
+    query UserStats($id: ID!) {
+  getUserStats(id: $id) {
+    userId
+    attendGames
+    orgGames
+    user {
+      firstName
+      lastName
+      avatar {
+        url
+      }
+      birthday
+      gender
+      prefferedPosition
+      bannedAt
+      banReason
+      ratingScore
+      ratingTotal
+      attendyScore
+      attendyTotal
+      checkinRating
+      commercialFrom
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserStatsQuery__
+ *
+ * To run a query within a React component, call `useUserStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserStatsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserStatsQuery(baseOptions: Apollo.QueryHookOptions<UserStatsQuery, UserStatsQueryVariables>) {
+        return Apollo.useQuery<UserStatsQuery, UserStatsQueryVariables>(UserStatsDocument, baseOptions);
+      }
+export function useUserStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserStatsQuery, UserStatsQueryVariables>) {
+          return Apollo.useLazyQuery<UserStatsQuery, UserStatsQueryVariables>(UserStatsDocument, baseOptions);
+        }
+export type UserStatsQueryHookResult = ReturnType<typeof useUserStatsQuery>;
+export type UserStatsLazyQueryHookResult = ReturnType<typeof useUserStatsLazyQuery>;
+export type UserStatsQueryResult = Apollo.QueryResult<UserStatsQuery, UserStatsQueryVariables>;
+export const UsersStatsDocument = gql`
+    query UsersStats {
+  getUsersStats {
+    rows {
+      userId
+      attendGames
+      orgGames
+      user {
+        firstName
+        lastName
+        birthday
+        gender
+        avatar {
+          url
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useUsersStatsQuery__
+ *
+ * To run a query within a React component, call `useUsersStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUsersStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUsersStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useUsersStatsQuery(baseOptions?: Apollo.QueryHookOptions<UsersStatsQuery, UsersStatsQueryVariables>) {
+        return Apollo.useQuery<UsersStatsQuery, UsersStatsQueryVariables>(UsersStatsDocument, baseOptions);
+      }
+export function useUsersStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersStatsQuery, UsersStatsQueryVariables>) {
+          return Apollo.useLazyQuery<UsersStatsQuery, UsersStatsQueryVariables>(UsersStatsDocument, baseOptions);
+        }
+export type UsersStatsQueryHookResult = ReturnType<typeof useUsersStatsQuery>;
+export type UsersStatsLazyQueryHookResult = ReturnType<typeof useUsersStatsLazyQuery>;
+export type UsersStatsQueryResult = Apollo.QueryResult<UsersStatsQuery, UsersStatsQueryVariables>;

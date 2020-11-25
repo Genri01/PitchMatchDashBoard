@@ -12,6 +12,14 @@ export const FieldQuery = gql`
       phone
       email
       size
+      fromTime
+      toTime
+      point {
+        location
+      }
+      files {
+        url
+      }
     }
   }
 `;

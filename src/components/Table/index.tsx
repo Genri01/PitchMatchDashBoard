@@ -16,25 +16,30 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { useReactToPrint } from "react-to-print";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PrintIcon from "@material-ui/icons/Print";
-import SearchIcon from "@material-ui/icons/Search";
-import { InputBase } from "@material-ui/core";
+
 import ReactExport from "react-export-excel";
 
 import { useStyles, useToolbarStyles } from "./styles";
 import { Order, stableSort, getComparator } from "./funcs";
-import { Link } from "../UI/Link";
-import { searchFilter } from "../../utils";
-import { Place } from "../../generated/apolloComponents";
+import { searchFilter, SearchFilterFunc } from "../../utils";
+import { Link, Search } from "../UI";
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 export interface HeadCell<T> {
-  disablePadding: boolean;
+  disablePadding?: boolean;
   id: keyof T;
+  primaryKey?: boolean;
+  isImage?: boolean;
+  isItemLink?: boolean;
+  linkFormatter?: (el: T) => string;
   label: string;
-  numeric: boolean;
+  numeric?: boolean;
+  exportable?: boolean;
+  withSeparateSearch?: boolean;
+  valueGetter?: SearchFilterFunc;
 }
 
 interface EnhancedTableProps<T> {
@@ -115,7 +120,7 @@ interface IProps<T> {
   headCells: HeadCell<T>[];
 }
 
-export function Table<T>({ title, data, headCells }: IProps<T>) {
+export function Table<T>({ title, data = [], headCells }: IProps<T>) {
   const classes = useStyles();
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
@@ -126,13 +131,32 @@ export function Table<T>({ title, data, headCells }: IProps<T>) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchItems, setSearchItems] = useState({} as any);
 
-  data = searchFilter(searchQuery, data, [
-    (el: Place) => el?.name || "",
-    (el: Place) => el?.description || "",
-    (el: Place) => el?.address || "",
-    (el: Place) => (typeof el?.price == "number" ? el.price.toString() : ""),
-  ]);
+  const separateSearchFuncs: { [key: string]: Function } = headCells.reduce(
+    (acc, cur) => {
+      if (cur.valueGetter && cur.withSeparateSearch) {
+        acc[cur.id as string] = cur.valueGetter;
+      }
+      return acc;
+    },
+    {}
+  );
+
+  Object.entries(separateSearchFuncs).forEach(([name, func]) => {
+    const val = searchItems[name];
+    if (val) {
+      data = searchFilter(val, data, [func as any]);
+    }
+  });
+
+  data = searchFilter(
+    searchQuery,
+    data,
+    headCells
+      .filter((hc) => !!hc.valueGetter)
+      .map((hc) => hc.valueGetter) as SearchFilterFunc[]
+  );
 
   const handleRequestSort = (
     _event: React.MouseEvent<unknown>,
@@ -171,15 +195,14 @@ export function Table<T>({ title, data, headCells }: IProps<T>) {
             }
           >
             <ExcelSheet data={data} name="Data">
-              <ExcelColumn label="Id" value="id" />
-              <ExcelColumn label="Название" value="name" />
-              <ExcelColumn label="Описание" value="description" />
-              <ExcelColumn label="Адрес" value="address" />
-              <ExcelColumn label="Цена" value="price" />
-              <ExcelColumn
-                label="Крытое/открытое"
-                value={(col) => (col.roof ? "Да" : "Нет")}
-              />
+              {headCells
+                .filter((hc) => hc.exportable)
+                .map((hc) => (
+                  <ExcelColumn
+                    label={hc.label}
+                    value={hc.valueGetter || hc.id}
+                  />
+                ))}
             </ExcelSheet>
           </ExcelFile>
 
@@ -188,20 +211,8 @@ export function Table<T>({ title, data, headCells }: IProps<T>) {
               <PrintIcon />
             </IconButton>
           </Tooltip>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Поиск…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              inputProps={{ "aria-label": "search" }}
-            />
+          <div className={classes.mainSearchWrapper}>
+            <Search value={searchQuery} onChange={setSearchQuery} />
           </div>
         </EnhancedTableToolbar>
         <TableContainer ref={componentRef as any}>
@@ -220,23 +231,67 @@ export function Table<T>({ title, data, headCells }: IProps<T>) {
               rowCount={data.length}
             />
             <TableBody>
+              <TableRow hover tabIndex={-1}>
+                {headCells.map((hc) =>
+                  hc.withSeparateSearch && hc.valueGetter ? (
+                    <TableCell>
+                      <Search
+                        value={searchItems?.[hc.id]}
+                        onChange={(v) =>
+                          setSearchItems({ ...searchItems, [hc.id]: v })
+                        }
+                        slight={true}
+                      />
+                    </TableCell>
+                  ) : (
+                    <TableCell></TableCell>
+                  )
+                )}
+              </TableRow>
               {stableSort(data as any, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row: any, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
+
+                  const extractValue = (hc: HeadCell<T>, row: T) =>
+                    hc.valueGetter ? hc.valueGetter(row) : row[hc.id];
 
                   return (
                     <TableRow hover tabIndex={-1} key={row.name}>
                       <TableCell component="th" id={labelId} scope="row">
                         {page * rowsPerPage + index + 1}
                       </TableCell>
-                      <TableCell>
-                        <Link to={`/field/${row.id}`}>{row.name}</Link>
-                      </TableCell>
-                      <TableCell>{row.description}</TableCell>
-                      <TableCell>{row.address}</TableCell>
-                      <TableCell>{row.roof ? "Да" : "Нет"}</TableCell>
-                      <TableCell>{row.price}</TableCell>
+                      {headCells
+                        .filter((hc) => !hc.primaryKey)
+
+                        .map((hc) => {
+                          if (hc.isItemLink && hc.linkFormatter) {
+                            return (
+                              <TableCell>
+                                <Link to={hc.linkFormatter(row)}>
+                                  {row.name}
+                                </Link>
+                              </TableCell>
+                            );
+                          }
+
+                          if (hc.isImage) {
+                            const imgSrc = extractValue(hc, row);
+                            return imgSrc ? (
+                              <TableCell>
+                                <img
+                                  src={imgSrc}
+                                  className={classes.profilePic}
+                                  alt=""
+                                />
+                              </TableCell>
+                            ) : (
+                              <TableCell />
+                            );
+                          }
+
+                          return <TableCell>{extractValue(hc, row)}</TableCell>;
+                        })}
                     </TableRow>
                   );
                 })}
@@ -249,7 +304,7 @@ export function Table<T>({ title, data, headCells }: IProps<T>) {
           </MaterialTable>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 25, 50, 100]}
           component="div"
           count={data.length}
           rowsPerPage={rowsPerPage}

@@ -1,10 +1,11 @@
 import React from "react";
-import { CreateFieldForm } from "../components/forms";
+
+import { CreateFieldBox } from "../../containers";
 
 export const CreateFieldPage = () => {
   return (
     <div>
-      <CreateFieldForm />
+      <CreateFieldBox />
     </div>
   );
 };

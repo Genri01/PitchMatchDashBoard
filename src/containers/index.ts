@@ -1,3 +1,2 @@
-export * from "./FieldsListBox";
-export * from "./CreateFieldBox";
+export * from "./field";
 export * from "./LoginBox";

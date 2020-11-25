@@ -31,4 +31,22 @@ export const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(3, 0, 2),
     width: 620,
   },
+  imageUploaderWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    margin: theme.spacing(2, 0, 0),
+    width: "97%",
+  },
+  mapWrapper: {
+    width: "100%",
+    height: "400px",
+    margin: theme.spacing(1),
+    padding: "0 8px",
+  },
+  mapContainer: {
+    width: "100%",
+    height: "400px",
+    borderRadius: 8,
+    overflow: "hidden",
+  },
 }));

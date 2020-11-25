@@ -1,57 +1,41 @@
-import React, { useContext } from "react";
+import React, { FC, ReactNode } from "react";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import { useHistory } from "react-router-dom";
-import { useForm } from "react-hook-form";
 import { Avatar, Checkbox, FormControlLabel } from "@material-ui/core";
 
+import { useFieldForm, UseFieldFormProps } from "./useFieldForm";
+import { ImageUploader } from "../../UI";
+import { MarkerMap } from "../../UI/MarkerMap";
 import { useStyles } from "./style";
-import {
-  PlaceInput,
-  useCreateFieldMutation,
-} from "../../../generated/apolloComponents";
-import { UserContext } from "../../../contexts";
 
-export const CreateFieldForm = () => {
+interface IProps extends UseFieldFormProps {
+  title: string;
+  actionTitle: string;
+  icon?: ReactNode;
+}
+
+export const FieldForm: FC<IProps> = ({
+  mode = "create",
+  existingData,
+  title,
+  actionTitle,
+  icon,
+}) => {
   const classes = useStyles();
-  const { handleSubmit, register } = useForm();
-  const history = useHistory();
-  const { me } = useContext(UserContext);
-  const [createField] = useCreateFieldMutation();
-
-  const onSubmit = async (data: PlaceInput) => {
-    try {
-      const res = await createField({
-        variables: {
-          input: {
-            ...data,
-            price: typeof data.price == "string" ? parseFloat(data.price) : 0,
-            userId: me!.id,
-          },
-        },
-      });
-      const resId = res.data?.upsertPlace?.id;
-      if (resId) {
-        history.push(`/field/${resId}`);
-      }
-    } catch (err) {}
-  };
+  const { register, onSubmit, pos, setPos, setImages, watch } = useFieldForm({
+    mode,
+    existingData,
+  });
 
   return (
     <div className={classes.paper}>
-      <Avatar className={classes.avatar}>
-        <AddCircleIcon />
-      </Avatar>
+      <Avatar className={classes.avatar}>{icon || <AddCircleIcon />}</Avatar>
       <Typography component="h1" variant="h5">
-        Создать поле
+        {title}
       </Typography>
-      <form
-        className={classes.form}
-        noValidate
-        onSubmit={handleSubmit<PlaceInput>(onSubmit)}
-      >
+      <form className={classes.form} noValidate onSubmit={onSubmit}>
         <div>
           <TextField
             label="Наименование поля"
@@ -138,9 +122,54 @@ export const CreateFieldForm = () => {
           />
           <FormControlLabel
             className="MuiTextField-root"
-            control={<Checkbox inputRef={register} name="roof" />}
+            control={
+              <Checkbox
+                id="roof-input"
+                inputRef={register}
+                name="roof"
+                defaultChecked={watch("roof")}
+              />
+            }
             label="Крытое"
           />
+        </div>
+        <div>
+          <TextField
+            label="Широта"
+            id="outlined-size-normal"
+            variant="outlined"
+            type="number"
+            value={pos.lat}
+            onChange={(e) =>
+              setPos({
+                ...pos,
+                lat: e.target.value ? parseFloat(e.target.value) : 0,
+              })
+            }
+          />
+          <TextField
+            label="Долгота"
+            id="outlined-size-normal"
+            variant="outlined"
+            type="number"
+            value={pos.lng}
+            onChange={(e) =>
+              setPos({
+                ...pos,
+                lng: e.target.value ? parseFloat(e.target.value) : 0,
+              })
+            }
+          />
+        </div>
+        <div className={classes.mapWrapper}>
+          <MarkerMap
+            containerClass={classes.mapContainer}
+            pos={pos}
+            onChange={(p) => setPos(p)}
+          />
+        </div>
+        <div className={classes.imageUploaderWrapper}>
+          <ImageUploader onChange={setImages} />
         </div>
 
         <Button
@@ -150,7 +179,7 @@ export const CreateFieldForm = () => {
           color="primary"
           className={classes.submit}
         >
-          Создать
+          {actionTitle}
         </Button>
       </form>
     </div>

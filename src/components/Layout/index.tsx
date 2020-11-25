@@ -13,14 +13,30 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Box, IconButton, ListSubheader } from "@material-ui/core";
 
 import { useStyles } from "./styles";
-import { MENU_ITEMS } from "../../constants";
+import { MENU_ITEMS, MENU_ITEMS_ARR, MenuItem } from "../../constants";
 import { UserContext } from "../../contexts";
+
+interface NavLinkProps {
+  item: MenuItem;
+}
+
+const NavLink: FC<NavLinkProps> = ({ item }) => (
+  <Link
+    to={item.path}
+    style={{ textDecoration: "none", color: "inherit" }}
+    key={item.name}
+  >
+    <ListItem button>
+      <ListItemText primary={item.name} />
+    </ListItem>
+  </Link>
+);
 
 export const Layout: FC = ({ children }) => {
   const classes = useStyles();
   const { pathname } = useLocation();
   const { logout } = useContext(UserContext);
-  const title = MENU_ITEMS.FIELD.find((el) => el.path === pathname)?.name || "";
+  const title = MENU_ITEMS_ARR.find((el) => el.path === pathname)?.name || "";
 
   return (
     <div className={classes.root}>
@@ -69,14 +85,8 @@ export const Layout: FC = ({ children }) => {
         <List>
           <ListSubheader>Пользователи</ListSubheader>
 
-          {[
-            "Все пользователи",
-            "Cтраница пользователя",
-            "Редактирование пользователя",
-          ].map((text) => (
-            <ListItem button key={text}>
-              <ListItemText primary={text} />
-            </ListItem>
+          {MENU_ITEMS.USER.filter((el) => el.displayInMenu).map((menuItem) => (
+            <NavLink item={menuItem} key={menuItem.name} />
           ))}
         </List>
         <Divider />
@@ -84,14 +94,7 @@ export const Layout: FC = ({ children }) => {
           <ListSubheader>Поля</ListSubheader>
 
           {MENU_ITEMS.FIELD.filter((el) => el.displayInMenu).map((menuItem) => (
-            <Link
-              to={menuItem.path}
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              <ListItem button key={menuItem.name}>
-                <ListItemText primary={menuItem.name} />
-              </ListItem>
-            </Link>
+            <NavLink item={menuItem} key={menuItem.name} />
           ))}
         </List>
       </Drawer>
