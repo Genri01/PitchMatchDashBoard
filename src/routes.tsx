@@ -10,6 +10,10 @@ import {
   LoginPage,
   UsersPage,
   EditFieldPage,
+  GamesPage,
+  GamePage,
+  CreateGamePage,
+  CalendarPage,
 } from "./pages";
 import { UserPage } from "./pages/user/UserPage";
 
@@ -27,8 +31,15 @@ export const AppRoutes = () => {
             <Route path={Routes.EDIT_FIELD} component={EditFieldPage} />
             <Route path={Routes.FIELD} component={FieldPage} exact />
             <Route path={Routes.FIELDS} component={FieldsPage} />
+
             <Route path={Routes.USERS} component={UsersPage} />
             <Route path={Routes.USER} component={UserPage} />
+
+            <Route path={Routes.GAMES} component={GamesPage} />
+            <Route path={Routes.CREATE_GAME} component={CreateGamePage} />
+            <Route path={Routes.GAME} component={GamePage} />
+
+            <Route path={Routes.GAMES_CALENDAR} component={CalendarPage} />
             <Route render={() => <Redirect to={Routes.FIELDS} />} />
           </Switch>
         </Layout>

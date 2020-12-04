@@ -37,5 +37,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.background.default,
       padding: theme.spacing(3),
     },
+    badge: {
+      margin: theme.spacing(2),
+    },
   })
 );

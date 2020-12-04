@@ -252,6 +252,8 @@ export type UserProfile = {
   __typename?: 'UserProfile';
   id: Scalars['ID'];
   role?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  phone?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   fullName?: Maybe<Scalars['String']>;
@@ -307,6 +309,7 @@ export type Game = {
   ratingTotal?: Maybe<Scalars['Int']>;
   avatar?: Maybe<File>;
   members?: Maybe<Array<Maybe<GameMember>>>;
+  totalMembers: Scalars['Int'];
   deletedAt?: Maybe<Scalars['Date']>;
   commercial?: Maybe<Scalars['Boolean']>;
 };
@@ -1098,6 +1101,79 @@ export type FieldsQuery = (
   )> }
 );
 
+export type MapFieldsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MapFieldsQuery = (
+  { __typename?: 'Query' }
+  & { getPlaces?: Maybe<(
+    { __typename?: 'PlaceList' }
+    & { rows?: Maybe<Array<Maybe<(
+      { __typename?: 'Place' }
+      & Pick<Place, 'id' | 'address' | 'name'>
+      & { point?: Maybe<(
+        { __typename?: 'ShortGeoPoint' }
+        & Pick<ShortGeoPoint, 'id' | 'location'>
+      )> }
+    )>>> }
+  )> }
+);
+
+export type UpsertGameMutationVariables = Exact<{
+  input: GameInput;
+  id?: Maybe<Scalars['ID']>;
+}>;
+
+
+export type UpsertGameMutation = (
+  { __typename?: 'Mutation' }
+  & { upsertGame: (
+    { __typename?: 'Game' }
+    & Pick<Game, 'id'>
+  ) }
+);
+
+export type GameQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GameQuery = (
+  { __typename?: 'Query' }
+  & { getGame?: Maybe<(
+    { __typename?: 'Game' }
+    & Pick<Game, 'id' | 'teamSeparation' | 'startDate' | 'address' | 'status' | 'price' | 'deletedAt' | 'ageFrom' | 'ageTo' | 'description' | 'gender'>
+    & { user?: Maybe<(
+      { __typename?: 'UserProfile' }
+      & Pick<UserProfile, 'id' | 'firstName' | 'lastName'>
+    )>, members?: Maybe<Array<Maybe<(
+      { __typename?: 'GameMember' }
+      & Pick<GameMember, 'userId'>
+    )>>> }
+  )> }
+);
+
+export type GamesQueryVariables = Exact<{
+  filter: GameFilter;
+}>;
+
+
+export type GamesQuery = (
+  { __typename?: 'Query' }
+  & { getGames?: Maybe<(
+    { __typename?: 'GameList' }
+    & Pick<GameList, 'count'>
+    & { rows: Array<Maybe<(
+      { __typename?: 'Game' }
+      & Pick<Game, 'id' | 'startDate' | 'address' | 'status' | 'price' | 'description' | 'totalMembers'>
+      & { user?: Maybe<(
+        { __typename?: 'UserProfile' }
+        & Pick<UserProfile, 'id' | 'firstName' | 'lastName'>
+      )> }
+    )>> }
+  )> }
+);
+
 export type RegUserFragment = (
   { __typename: 'User' }
   & Pick<User, 'id'>
@@ -1323,6 +1399,177 @@ export function useFieldsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Fie
 export type FieldsQueryHookResult = ReturnType<typeof useFieldsQuery>;
 export type FieldsLazyQueryHookResult = ReturnType<typeof useFieldsLazyQuery>;
 export type FieldsQueryResult = Apollo.QueryResult<FieldsQuery, FieldsQueryVariables>;
+export const MapFieldsDocument = gql`
+    query MapFields {
+  getPlaces(filter: {}) {
+    rows {
+      id
+      address
+      name
+      point {
+        id
+        location
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useMapFieldsQuery__
+ *
+ * To run a query within a React component, call `useMapFieldsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMapFieldsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMapFieldsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMapFieldsQuery(baseOptions?: Apollo.QueryHookOptions<MapFieldsQuery, MapFieldsQueryVariables>) {
+        return Apollo.useQuery<MapFieldsQuery, MapFieldsQueryVariables>(MapFieldsDocument, baseOptions);
+      }
+export function useMapFieldsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MapFieldsQuery, MapFieldsQueryVariables>) {
+          return Apollo.useLazyQuery<MapFieldsQuery, MapFieldsQueryVariables>(MapFieldsDocument, baseOptions);
+        }
+export type MapFieldsQueryHookResult = ReturnType<typeof useMapFieldsQuery>;
+export type MapFieldsLazyQueryHookResult = ReturnType<typeof useMapFieldsLazyQuery>;
+export type MapFieldsQueryResult = Apollo.QueryResult<MapFieldsQuery, MapFieldsQueryVariables>;
+export const UpsertGameDocument = gql`
+    mutation UpsertGame($input: GameInput!, $id: ID) {
+  upsertGame(input: $input, id: $id) {
+    id
+  }
+}
+    `;
+export type UpsertGameMutationFn = Apollo.MutationFunction<UpsertGameMutation, UpsertGameMutationVariables>;
+
+/**
+ * __useUpsertGameMutation__
+ *
+ * To run a mutation, you first call `useUpsertGameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpsertGameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [upsertGameMutation, { data, loading, error }] = useUpsertGameMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpsertGameMutation(baseOptions?: Apollo.MutationHookOptions<UpsertGameMutation, UpsertGameMutationVariables>) {
+        return Apollo.useMutation<UpsertGameMutation, UpsertGameMutationVariables>(UpsertGameDocument, baseOptions);
+      }
+export type UpsertGameMutationHookResult = ReturnType<typeof useUpsertGameMutation>;
+export type UpsertGameMutationResult = Apollo.MutationResult<UpsertGameMutation>;
+export type UpsertGameMutationOptions = Apollo.BaseMutationOptions<UpsertGameMutation, UpsertGameMutationVariables>;
+export const GameDocument = gql`
+    query Game($id: ID!) {
+  getGame(id: $id) {
+    id
+    teamSeparation
+    startDate
+    address
+    status
+    price
+    deletedAt
+    ageFrom
+    ageTo
+    description
+    gender
+    user {
+      id
+      firstName
+      lastName
+    }
+    members {
+      userId
+    }
+  }
+}
+    `;
+
+/**
+ * __useGameQuery__
+ *
+ * To run a query within a React component, call `useGameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGameQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGameQuery(baseOptions: Apollo.QueryHookOptions<GameQuery, GameQueryVariables>) {
+        return Apollo.useQuery<GameQuery, GameQueryVariables>(GameDocument, baseOptions);
+      }
+export function useGameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GameQuery, GameQueryVariables>) {
+          return Apollo.useLazyQuery<GameQuery, GameQueryVariables>(GameDocument, baseOptions);
+        }
+export type GameQueryHookResult = ReturnType<typeof useGameQuery>;
+export type GameLazyQueryHookResult = ReturnType<typeof useGameLazyQuery>;
+export type GameQueryResult = Apollo.QueryResult<GameQuery, GameQueryVariables>;
+export const GamesDocument = gql`
+    query Games($filter: GameFilter!) {
+  getGames(filter: $filter) {
+    count
+    rows {
+      id
+      startDate
+      address
+      status
+      price
+      description
+      user {
+        id
+        firstName
+        lastName
+      }
+      totalMembers
+    }
+  }
+}
+    `;
+
+/**
+ * __useGamesQuery__
+ *
+ * To run a query within a React component, call `useGamesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGamesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGamesQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useGamesQuery(baseOptions: Apollo.QueryHookOptions<GamesQuery, GamesQueryVariables>) {
+        return Apollo.useQuery<GamesQuery, GamesQueryVariables>(GamesDocument, baseOptions);
+      }
+export function useGamesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GamesQuery, GamesQueryVariables>) {
+          return Apollo.useLazyQuery<GamesQuery, GamesQueryVariables>(GamesDocument, baseOptions);
+        }
+export type GamesQueryHookResult = ReturnType<typeof useGamesQuery>;
+export type GamesLazyQueryHookResult = ReturnType<typeof useGamesLazyQuery>;
+export type GamesQueryResult = Apollo.QueryResult<GamesQuery, GamesQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($credentials: ViewerCredentialsInput!) {
   logIn(credentials: $credentials) {

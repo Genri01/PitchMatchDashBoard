@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef } from "react";
+import React, { FC, useState, useRef, ElementType } from "react";
 import clsx from "clsx";
 import MaterialTable from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -36,6 +36,8 @@ export interface HeadCell<T> {
   isItemLink?: boolean;
   linkFormatter?: (el: T) => string;
   label: string;
+  BadgeComponent?: ElementType;
+  badgePropsExtractor?: (el: T) => Object;
   numeric?: boolean;
   exportable?: boolean;
   withSeparateSearch?: boolean;
@@ -269,8 +271,18 @@ export function Table<T>({ title, data = [], headCells }: IProps<T>) {
                             return (
                               <TableCell>
                                 <Link to={hc.linkFormatter(row)}>
-                                  {row.name}
+                                  {extractValue(hc, row)}
                                 </Link>
+                              </TableCell>
+                            );
+                          }
+
+                          if (hc.BadgeComponent && hc.badgePropsExtractor) {
+                            return (
+                              <TableCell>
+                                <hc.BadgeComponent
+                                  {...hc.badgePropsExtractor(row)}
+                                />
                               </TableCell>
                             );
                           }

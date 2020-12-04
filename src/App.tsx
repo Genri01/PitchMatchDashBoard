@@ -7,9 +7,10 @@ import { ApolloProvider } from "@apollo/client/react/context/ApolloProvider";
 import { ApolloProvider as ApolloHooksProvider } from "@apollo/react-hooks";
 
 import { AppRoutes } from "./routes";
-import { UserContextProvider } from "./contexts";
+import { GamesContextProvider, UserContextProvider } from "./contexts";
 
 import "leaflet/dist/leaflet.css";
+import "react-leaflet-markercluster/dist/styles.min.css";
 
 const link = createUploadLink({
   uri: process.env.REACT_APP_ENDPOINT,
@@ -28,7 +29,9 @@ function App() {
       <ApolloProvider client={client as any}>
         <ApolloHooksProvider client={client}>
           <UserContextProvider>
-            <AppRoutes />
+            <GamesContextProvider>
+              <AppRoutes />
+            </GamesContextProvider>
           </UserContextProvider>
         </ApolloHooksProvider>
       </ApolloProvider>

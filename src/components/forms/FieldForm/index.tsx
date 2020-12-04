@@ -6,8 +6,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import { Avatar, Checkbox, FormControlLabel } from "@material-ui/core";
 
 import { useFieldForm, UseFieldFormProps } from "./useFieldForm";
-import { ImageUploader } from "../../UI";
-import { MarkerMap } from "../../UI/MarkerMap";
+import { ImageUploader, MarkerMap } from "../../UI";
 import { useStyles } from "./style";
 
 interface IProps extends UseFieldFormProps {

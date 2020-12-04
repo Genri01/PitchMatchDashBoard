@@ -11,10 +11,11 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Box, IconButton, ListSubheader } from "@material-ui/core";
+import Badge from "@material-ui/core/Badge";
 
 import { useStyles } from "./styles";
 import { MENU_ITEMS, MENU_ITEMS_ARR, MenuItem } from "../../constants";
-import { UserContext } from "../../contexts";
+import { GamesContext, UserContext } from "../../contexts";
 
 interface NavLinkProps {
   item: MenuItem;
@@ -37,6 +38,9 @@ export const Layout: FC = ({ children }) => {
   const { pathname } = useLocation();
   const { logout } = useContext(UserContext);
   const title = MENU_ITEMS_ARR.find((el) => el.path === pathname)?.name || "";
+
+  const { games } = useContext(GamesContext);
+  const unconfirmedGames = games.filter((el) => el.status != "confirmed");
 
   return (
     <div className={classes.root}>
@@ -72,14 +76,23 @@ export const Layout: FC = ({ children }) => {
         <Divider />
         <List>
           <ListSubheader>Игры/бронирования</ListSubheader>
-
-          {["Календарь", "Все игры", "Cтраница игры", "Создать игру"].map(
-            (text) => (
-              <ListItem button key={text}>
-                <ListItemText primary={text} />
-              </ListItem>
-            )
-          )}
+          <Link
+            to={"/calendar"}
+            style={{ textDecoration: "none", color: "inherit" }}
+            key={"calendar"}
+          >
+            <ListItem button>
+              <ListItemText primary={"Календарь"} />
+              <Badge
+                badgeContent={unconfirmedGames?.length}
+                className={classes.badge}
+                color="primary"
+              />
+            </ListItem>
+          </Link>
+          {MENU_ITEMS.GAME.filter((el) => el.displayInMenu).map((menuItem) => (
+            <NavLink item={menuItem} key={menuItem.name} />
+          ))}
         </List>
         <Divider />
         <List>
