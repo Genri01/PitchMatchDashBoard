@@ -11,9 +11,11 @@ import Typography from "@material-ui/core/Typography";
 import { useStyles } from "./styles";
 import { ViewerCredentialsInput } from "../../../generated/apolloComponents";
 import { UserContext } from "../../../contexts";
+import { useTranslation } from "react-i18next";
 
 export const LoginForm = () => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const { handleSubmit, register } = useForm();
   const { login } = useContext(UserContext);
 
@@ -23,7 +25,7 @@ export const LoginForm = () => {
         <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
-        Войти в аккаунт
+        {t("form.login.title")}
       </Typography>
       <form
         className={classes.form}
@@ -37,7 +39,7 @@ export const LoginForm = () => {
           required
           fullWidth
           id="login"
-          label="Логин"
+          label={t("form.login.login")}
           name="login"
           inputRef={register}
           defaultValue="+79284609803"
@@ -52,7 +54,7 @@ export const LoginForm = () => {
           name="password"
           inputRef={register}
           defaultValue="123qweasd"
-          label="Пароль"
+          label={t("form.login.password")}
           type="password"
           id="password"
           autoComplete="current-password"
@@ -65,7 +67,7 @@ export const LoginForm = () => {
           color="primary"
           className={classes.submit}
         >
-          Войти
+          {t("form.login.submit")}
         </Button>
       </form>
     </div>

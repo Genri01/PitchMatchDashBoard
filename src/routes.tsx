@@ -30,6 +30,7 @@ export const AppRoutes = () => {
             <Route path={Routes.CREATE_FIELD} component={CreateFieldPage} />
             <Route path={Routes.EDIT_FIELD} component={EditFieldPage} />
             <Route path={Routes.FIELD} component={FieldPage} exact />
+
             <Route path={Routes.FIELDS} component={FieldsPage} />
 
             <Route path={Routes.USERS} component={UsersPage} />

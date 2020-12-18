@@ -1,54 +1,63 @@
-import { Box, Button, Paper, Typography } from "@material-ui/core";
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
+import { Box, Paper } from "@material-ui/core";
 import { Calendar } from "../../../components/UI";
-import { Checkbox, FormControlLabel } from "@material-ui/core";
 import { useStyles } from "./style";
-import { GamesContext } from "../../../contexts";
+import { useCalendarLocationParams } from "../../../components/UI/Calendar/useCalendarLocationParams";
+import { useHistory } from "react-router-dom";
+import {
+  GameStatusFilter,
+  GameStatusFormFilters,
+} from "../../../components/forms";
+import { Game, useGamesQuery } from "../../../generated/apolloComponents";
 
 export const CalendarBox = () => {
   const classes = useStyles();
-  const { games } = useContext(GamesContext);
+  const history = useHistory();
+  const { date } = useCalendarLocationParams();
+
+  const [statuses, setStatuses] = useState<string[]>([]);
+  const [games, setGames] = useState<Game[]>([]);
+  const { data } = useGamesQuery({
+    variables: {
+      filter: {
+        startDate: new Date().toString(),
+        ...(statuses.length ? { status: statuses } : {}),
+      },
+    },
+    errorPolicy: "ignore",
+  });
+
+  useEffect(() => {
+    const fetchedGames = (data?.getGames?.rows?.filter((el) => !!el) ||
+      []) as Game[];
+
+    if (fetchedGames.length) setGames(fetchedGames);
+  }, [data]);
+
+  const onFilter = async (data: GameStatusFormFilters) => {
+    const statusesArr = Object.entries(data)
+      .filter(([_key, value]) => value)
+      .map(([key, _value]) => key);
+
+    setStatuses(statusesArr);
+  };
 
   return (
     <Box className={classes.wrapper}>
       <Box className={classes.calendarWrapper}>
-        <Calendar games={games} />
+        <Calendar
+          games={games}
+          initialDate={date}
+          onDateRageChange={(dateInfo) => {
+            dateInfo?.start.setDate(dateInfo?.start.getDate() + 10);
+            const newYear = dateInfo?.start.getFullYear();
+            const newMonth = dateInfo?.start.getMonth();
+            if (newYear) history.push(`/calendar/${newYear}/${newMonth}`);
+          }}
+        />
       </Box>
       <Paper variant="outlined" className={classes.filtersWrapper}>
-        <Typography
-          component="span"
-          variant="h5"
-          color="textPrimary"
-          className={classes.filtersTitle}
-        >
-          Фильтр
-        </Typography>
-        <Box className={classes.filtersContainer}>
-          <FormControlLabel
-            className="MuiTextField-root"
-            control={<Checkbox id="roof-input" color="primary" name="roof" />}
-            label="Новые"
-          />
-          <FormControlLabel
-            className="MuiTextField-root"
-            control={<Checkbox id="roof-input" color="primary" name="roof" />}
-            label="Подтвержденные"
-          />
-          <FormControlLabel
-            className="MuiTextField-root"
-            control={<Checkbox id="roof-input" color="primary" name="roof" />}
-            label="Отклоненные"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="outlined"
-            color="primary"
-            className={classes.filterButton}
-          >
-            Фильтр
-          </Button>
-        </Box>
+        <GameStatusFilter onSubmit={onFilter} />
       </Paper>
     </Box>
   );

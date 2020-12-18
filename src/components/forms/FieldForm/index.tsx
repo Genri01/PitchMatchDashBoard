@@ -3,11 +3,19 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
-import { Avatar, Checkbox, FormControlLabel } from "@material-ui/core";
+import {
+  Avatar,
+  Checkbox,
+  FormControlLabel,
+  Snackbar,
+} from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 
 import { useFieldForm, UseFieldFormProps } from "./useFieldForm";
 import { ImageUploader, MarkerMap } from "../../UI";
 import { useStyles } from "./style";
+import { useTranslation } from "react-i18next";
+import { REGEX } from "../../../constants";
 
 interface IProps extends UseFieldFormProps {
   title: string;
@@ -23,7 +31,18 @@ export const FieldForm: FC<IProps> = ({
   icon,
 }) => {
   const classes = useStyles();
-  const { register, onSubmit, pos, setPos, setImages, watch } = useFieldForm({
+  const { t } = useTranslation();
+  const {
+    register,
+    onSubmit,
+    pos,
+    setPos,
+    setImages,
+    watch,
+    errors,
+    serverError,
+    setServerError,
+  } = useFieldForm({
     mode,
     existingData,
   });
@@ -37,16 +56,21 @@ export const FieldForm: FC<IProps> = ({
       <form className={classes.form} noValidate onSubmit={onSubmit}>
         <div>
           <TextField
-            label="Наименование поля"
+            label={t("form.fieldForm.name")}
             id="outlined-size-normal"
             variant="outlined"
             autoComplete="false"
             name="name"
-            inputRef={register}
+            required
+            inputRef={register({
+              required: t("error.required") as string,
+            })}
+            error={errors.name}
+            helperText={errors?.name?.message}
           />
           <TextField
+            label={t("form.fieldForm.description")}
             id="outlined-multiline-static"
-            label="Описание"
             multiline
             rows={4}
             variant="outlined"
@@ -56,14 +80,19 @@ export const FieldForm: FC<IProps> = ({
         </div>
         <div>
           <TextField
-            label="Адрес"
+            label={t("form.fieldForm.address")}
             id="outlined-size-normal"
             variant="outlined"
             name="address"
-            inputRef={register}
+            required
+            inputRef={register({
+              required: t("error.required") as string,
+            })}
+            error={errors.address}
+            helperText={errors?.address?.message}
           />
           <TextField
-            label="Цена"
+            label={t("form.fieldForm.price")}
             id="outlined-size-normal"
             variant="outlined"
             name="price"
@@ -73,51 +102,74 @@ export const FieldForm: FC<IProps> = ({
         </div>
         <div>
           <TextField
-            label="Телефон"
+            label={t("form.fieldForm.phoneNumber")}
             id="outlined-size-normal"
             variant="outlined"
             name="phone"
+            type="number"
             inputRef={register}
           />
           <TextField
-            label="Email"
+            label={t("form.fieldForm.email")}
             id="outlined-size-normal"
             variant="outlined"
             name="email"
-            inputRef={register}
+            inputRef={register({
+              pattern: {
+                value: REGEX.EMAIL,
+                message: t("error.email") as string,
+              },
+            })}
+            error={errors.email}
+            helperText={errors?.email?.message}
           />
         </div>
         <div>
           <TextField
+            label={t("form.fieldForm.openFrom")}
             id="datetime-local"
-            label="Работает от"
             type="datetime-local"
             variant="outlined"
             InputLabelProps={{
               shrink: true,
             }}
             name="fromTime"
-            inputRef={register}
+            required
+            inputRef={register({
+              required: t("error.required") as string,
+            })}
+            error={errors.fromTime}
+            helperText={errors?.fromTime?.message}
           />
           <TextField
+            label={t("form.fieldForm.openTo")}
             id="datetime-local"
-            label="Работает от"
             type="datetime-local"
             variant="outlined"
             InputLabelProps={{
               shrink: true,
             }}
             name="toTime"
-            inputRef={register}
+            required
+            inputRef={register({
+              required: t("error.required") as string,
+            })}
+            error={errors.toTime}
+            helperText={errors?.toTime?.message}
           />
         </div>
         <div>
           <TextField
-            label="Размер"
+            label={t("form.fieldForm.size")}
             id="outlined-size-normal"
             variant="outlined"
             name="size"
-            inputRef={register}
+            required
+            inputRef={register({
+              required: t("error.required") as string,
+            })}
+            error={errors.size}
+            helperText={errors?.size?.message}
           />
           <FormControlLabel
             className="MuiTextField-root"
@@ -129,12 +181,12 @@ export const FieldForm: FC<IProps> = ({
                 defaultChecked={watch("roof")}
               />
             }
-            label="Крытое"
+            label={t("form.fieldForm.indoor")}
           />
         </div>
         <div>
           <TextField
-            label="Широта"
+            label={t("form.fieldForm.latitude")}
             id="outlined-size-normal"
             variant="outlined"
             type="number"
@@ -147,7 +199,7 @@ export const FieldForm: FC<IProps> = ({
             }
           />
           <TextField
-            label="Долгота"
+            label={t("form.fieldForm.longitude")}
             id="outlined-size-normal"
             variant="outlined"
             type="number"
@@ -181,6 +233,16 @@ export const FieldForm: FC<IProps> = ({
           {actionTitle}
         </Button>
       </form>
+      <Snackbar
+        open={!!serverError}
+        autoHideDuration={6000}
+        onClose={() => setServerError(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <MuiAlert elevation={6} variant="standard" severity="error">
+          {serverError}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 };

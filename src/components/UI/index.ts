@@ -8,3 +8,4 @@ export * from "./MarkerMap";
 export * from "./FieldSelectMap";
 export * from "./FormSelect";
 export * from "./Calendar";
+export * from "./FieldsMap";

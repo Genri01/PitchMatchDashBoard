@@ -24,7 +24,8 @@ export interface UseFieldFormProps {
 export const useFieldForm = ({ existingData: ed }: UseFieldFormProps) => {
   const history = useHistory();
 
-  const { handleSubmit, register, watch } = useForm({
+  const { handleSubmit, register, watch, errors } = useForm<any>({
+    mode: "onChange",
     defaultValues: {
       ...ed,
       fromTime: ed?.fromTime
@@ -35,6 +36,7 @@ export const useFieldForm = ({ existingData: ed }: UseFieldFormProps) => {
         : "",
     },
   });
+  const [serverError, setServerError] = useState<any>();
 
   const { me } = useContext(UserContext);
   const [upsertField] = useUpsertFieldMutation();
@@ -60,6 +62,7 @@ export const useFieldForm = ({ existingData: ed }: UseFieldFormProps) => {
             : 0,
         userId: me!.id,
         location: [lat, lng],
+        visitType: "public",
       };
       if (images) input.filesToAdd = images;
 
@@ -74,7 +77,9 @@ export const useFieldForm = ({ existingData: ed }: UseFieldFormProps) => {
       if (resId) {
         history.push(`/field/${resId}`);
       }
-    } catch (err) {}
+    } catch (err) {
+      setServerError(err.message);
+    }
   };
 
   return {
@@ -84,5 +89,8 @@ export const useFieldForm = ({ existingData: ed }: UseFieldFormProps) => {
     setPos,
     setImages,
     watch,
+    serverError,
+    setServerError,
+    errors,
   };
 };

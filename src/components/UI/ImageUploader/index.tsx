@@ -7,7 +7,9 @@ import { getOrientation } from "get-orientation/browser";
 import { getCroppedImg, getRotatedImage } from "./canvasUtils";
 import { useStyles } from "./style";
 import { UploadButton } from "../UploadButton";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import { ImageList } from "..";
+import { useTranslation } from "react-i18next";
 
 const ORIENTATION_TO_ANGLE = {
   3: 180,
@@ -31,6 +33,7 @@ export const blobToFile = (theBlob: Blob, fileName: string): File => {
 
   return theBlob as File;
 };
+
 const dataURLtoFile = (dataurl, filename) => {
   var arr = dataurl.split(","),
     mime = arr[0].match(/:(.*?);/)[1],
@@ -47,10 +50,12 @@ const dataURLtoFile = (dataurl, filename) => {
 
 interface IProps {
   onChange: (v: any) => void;
+  defaultImages?: File[];
 }
 
 export const ImageUploader: FC<IProps> = ({ onChange }) => {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [rotation, setRotation] = useState(0);
@@ -91,12 +96,14 @@ export const ImageUploader: FC<IProps> = ({ onChange }) => {
   const onFileChange = async (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const files = e.target.files;
-      const filesArr = Array.from(files) as File[];
-      setRawImages(filesArr as any);
-      onChange(filesArr);
+      const newFilesArr = Array.from(files) as File[];
+      const allFilesArr = [...rawImages, ...newFilesArr];
+
+      setRawImages(allFilesArr as any);
+      onChange(allFilesArr);
 
       const imageDataUrls: any[] = [];
-      for (let f of filesArr) {
+      for (let f of newFilesArr) {
         let imageDataUrl = await readFile(f);
 
         const orientation = await getOrientation(f);
@@ -106,7 +113,7 @@ export const ImageUploader: FC<IProps> = ({ onChange }) => {
         }
         imageDataUrls.push(imageDataUrl);
       }
-      setImageSrcs(imageDataUrls as any);
+      setImageSrcs([...imageSrcs, ...imageDataUrls] as any);
     }
   };
 
@@ -133,7 +140,7 @@ export const ImageUploader: FC<IProps> = ({ onChange }) => {
                 variant="overline"
                 classes={{ root: classes.sliderLabel }}
               >
-                Зум
+                {t("action.zoom")}
               </Typography>
               <Slider
                 value={zoom}
@@ -149,7 +156,7 @@ export const ImageUploader: FC<IProps> = ({ onChange }) => {
                 variant="overline"
                 classes={{ root: classes.sliderLabel }}
               >
-                Поворот
+                {t("action.rotate")}
               </Typography>
               <Slider
                 value={rotation}
@@ -167,7 +174,7 @@ export const ImageUploader: FC<IProps> = ({ onChange }) => {
                 color="primary"
                 classes={{ root: classes.cropButton }}
               >
-                Обрезать
+                {t("action.crop")}
               </Button>
             )}
           </div>
@@ -175,15 +182,32 @@ export const ImageUploader: FC<IProps> = ({ onChange }) => {
             files={rawImages}
             rawFiles={true}
             selectedIdx={selectedIdx}
+            editable={true}
             onChange={(idx) => {
               setSelectedIdx(idx);
               setZoom(1);
               setRotation(0);
             }}
+            onDelete={(idx) => {
+              const newSelectedIdx = idx - 1 >= 0 ? idx - 1 : 0;
+              setSelectedIdx(newSelectedIdx);
+              setRawImages(rawImages.filter((_v, index) => index != idx));
+              setImageSrcs(imageSrcs.filter((_v, index) => index != idx));
+            }}
+            onMoreUpload={onFileChange}
           />
         </>
       ) : (
-        <UploadButton onChange={onFileChange} />
+        <UploadButton onChange={onFileChange}>
+          <Button
+            variant="outlined"
+            color="default"
+            component="span"
+            startIcon={<CloudUploadIcon />}
+          >
+            {t("action.uploadPhoto")}
+          </Button>
+        </UploadButton>
       )}
     </div>
   );

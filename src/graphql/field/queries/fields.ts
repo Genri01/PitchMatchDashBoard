@@ -10,6 +10,10 @@ export const FieldsQuery = gql`
         address
         roof
         price
+        point {
+          id
+          location
+        }
       }
     }
   }

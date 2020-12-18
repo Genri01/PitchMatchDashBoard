@@ -16,6 +16,7 @@ import { useStyles } from "./style";
 import { format } from "date-fns";
 import { useGameCard } from "./useGameCard";
 import { StatusBadge } from "./StatusBadge";
+import { useTranslation } from "react-i18next";
 
 interface ListItemProps {
   name: string;
@@ -57,7 +58,7 @@ interface IProps {
 
 export const GameCard: FC<IProps> = ({ data }: IProps) => {
   const classes = useStyles();
-
+  const { t } = useTranslation();
   const { accept, decline } = useGameCard(data);
 
   return (
@@ -78,7 +79,7 @@ export const GameCard: FC<IProps> = ({ data }: IProps) => {
                   </Typography>
 
                   <div>
-                    <Tooltip title="Отклонить">
+                    <Tooltip title={t("action.cancel") as string}>
                       <IconButton
                         aria-label="edit"
                         color="secondary"
@@ -87,7 +88,7 @@ export const GameCard: FC<IProps> = ({ data }: IProps) => {
                         <CloseIcon />
                       </IconButton>
                     </Tooltip>
-                    <Tooltip title="Принять">
+                    <Tooltip title={t("action.confirm") as string}>
                       <IconButton
                         aria-label="edit"
                         color="primary"
@@ -105,7 +106,12 @@ export const GameCard: FC<IProps> = ({ data }: IProps) => {
         <Divider variant="middle" component="li" />
         <GameListItem name="Id" value={data?.id || "-"} divider={true} />
         <GameListItem
-          name="Дата/Время"
+          name={t("game.fields.description")}
+          value={data?.description || "-"}
+          divider={true}
+        />
+        <GameListItem
+          name={t("game.fields.dateAndTime")}
           value={
             data?.startDate
               ? format(new Date(data.startDate), "yyyy-MM-dd hh:mm")
@@ -114,23 +120,23 @@ export const GameCard: FC<IProps> = ({ data }: IProps) => {
           divider={true}
         />
         <GameListItem
-          name="Количество человек в игре"
+          name={t("game.fields.size")}
           value={data?.totalMembers?.toString() || "-"}
           divider={true}
         />
         <GameListItem
-          name="Статус"
+          name={t("game.fields.status")}
           element={<StatusBadge status={data?.status || ""} />}
           value={data?.status || "-"}
           divider={true}
         />
         <GameListItem
-          name="Стоимость"
+          name={t("game.fields.price")}
           value={data?.price?.toString() || "-"}
           divider={true}
         />
         <GameListItem
-          name="Создатель игры"
+          name={t("game.fields.creator")}
           value={
             data?.user?.firstName
               ? `${data?.user?.firstName} ${data?.user?.lastName}`
@@ -139,7 +145,7 @@ export const GameCard: FC<IProps> = ({ data }: IProps) => {
           divider={true}
         />
         <GameListItem
-          name="Возраст: от - до"
+          name={t("game.fields.ageFromTo")}
           value={`${data?.ageFrom || ""} - ${data?.ageTo || ""}`}
           divider={false}
         />

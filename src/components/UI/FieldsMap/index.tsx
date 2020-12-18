@@ -7,37 +7,36 @@ import MarkerClusterGroup from "react-leaflet-markercluster";
 import { LatLng } from "..";
 import { MAP } from "../../../constants";
 import { Place } from "../../../generated/apolloComponents";
-import { MARKER_ICON, HIGHLIGHTED_ICON } from "../MarkerMap/MarkerIcon";
+import { MARKER_ICON } from "../MarkerMap/MarkerIcon";
 
 interface IProps {
   containerClass?: string;
   pos?: LatLng;
   onChoose?: (val: Place) => void;
   fields: Place[];
-  selectedItem: Place | null | undefined;
   withClusters?: boolean;
 }
 
-export const FieldSelectMap: FC<IProps> = ({
+export const FieldsMap: FC<IProps> = ({
   containerClass,
   pos = MAP.DEFAULT_POS,
   onChoose,
-  selectedItem,
   fields,
   withClusters = false,
 }) => {
   const { t } = useTranslation();
-  const [zoom, setZoom] = useState(MAP.DEFAULT_ZOOM);
+
+  const [zoom, setZoom] = useState(4 || MAP.DEFAULT_ZOOM);
 
   const markers = (
     <>
       {fields?.length &&
         fields.map((f, idx) =>
-          f.point?.location?.coordinates[0] &&
-          f.point?.location?.coordinates[1] ? (
+          f?.point?.location?.coordinates[0] &&
+          f?.point?.location?.coordinates[1] ? (
             <Marker
               position={f.point.location.coordinates}
-              icon={f.id == selectedItem?.id ? HIGHLIGHTED_ICON : MARKER_ICON}
+              icon={MARKER_ICON}
               key={idx}
             >
               <Popup>
@@ -61,7 +60,7 @@ export const FieldSelectMap: FC<IProps> = ({
                     style={{ width: 100 }}
                     onClick={() => onChoose && onChoose(f)}
                   >
-                    {t("action.select")}
+                    {t("action.goTo")}
                   </Button>
                 </div>
               </Popup>

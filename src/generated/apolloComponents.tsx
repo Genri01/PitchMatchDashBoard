@@ -545,6 +545,7 @@ export type PlaceList = {
 };
 
 export type GameFilter = {
+  status?: Maybe<Array<Maybe<Scalars['String']>>>;
   mode?: Maybe<Scalars['String']>;
   location?: Maybe<Scalars['GeoJSONCoordinates']>;
   radius?: Maybe<Scalars['Float']>;
@@ -1097,6 +1098,10 @@ export type FieldsQuery = (
     & { rows?: Maybe<Array<Maybe<(
       { __typename?: 'Place' }
       & Pick<Place, 'id' | 'name' | 'description' | 'address' | 'roof' | 'price'>
+      & { point?: Maybe<(
+        { __typename?: 'ShortGeoPoint' }
+        & Pick<ShortGeoPoint, 'id' | 'location'>
+      )> }
     )>>> }
   )> }
 );
@@ -1142,14 +1147,11 @@ export type GameQuery = (
   { __typename?: 'Query' }
   & { getGame?: Maybe<(
     { __typename?: 'Game' }
-    & Pick<Game, 'id' | 'teamSeparation' | 'startDate' | 'address' | 'status' | 'price' | 'deletedAt' | 'ageFrom' | 'ageTo' | 'description' | 'gender'>
+    & Pick<Game, 'id' | 'teamSeparation' | 'startDate' | 'address' | 'status' | 'price' | 'deletedAt' | 'ageFrom' | 'ageTo' | 'description' | 'gender' | 'totalMembers'>
     & { user?: Maybe<(
       { __typename?: 'UserProfile' }
       & Pick<UserProfile, 'id' | 'firstName' | 'lastName'>
-    )>, members?: Maybe<Array<Maybe<(
-      { __typename?: 'GameMember' }
-      & Pick<GameMember, 'userId'>
-    )>>> }
+    )> }
   )> }
 );
 
@@ -1252,7 +1254,7 @@ export type UsersStatsQuery = (
       & Pick<UserStats, 'userId' | 'attendGames' | 'orgGames'>
       & { user?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'firstName' | 'lastName' | 'birthday' | 'gender'>
+        & Pick<UserProfile, 'firstName' | 'lastName' | 'birthday' | 'gender' | 'email' | 'phone'>
         & { avatar?: Maybe<(
           { __typename?: 'File' }
           & Pick<File, 'url'>
@@ -1368,6 +1370,10 @@ export const FieldsDocument = gql`
       address
       roof
       price
+      point {
+        id
+        location
+      }
     }
   }
 }
@@ -1491,9 +1497,7 @@ export const GameDocument = gql`
       firstName
       lastName
     }
-    members {
-      userId
-    }
+    totalMembers
   }
 }
     `;
@@ -1730,6 +1734,8 @@ export const UsersStatsDocument = gql`
         lastName
         birthday
         gender
+        email
+        phone
         avatar {
           url
         }

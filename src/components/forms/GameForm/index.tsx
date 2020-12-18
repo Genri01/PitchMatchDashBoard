@@ -4,16 +4,20 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import MuiAlert from "@material-ui/lab/Alert";
 
-import { Avatar } from "@material-ui/core";
+import { Avatar, Snackbar } from "@material-ui/core";
 
 import { useStyles } from "./style";
 import { useGameForm } from "./useGameForm";
 import { FieldSelectMap, FormSelect } from "../../UI";
 import { FormProvider } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 export const GameForm = () => {
   const classes = useStyles();
+  const { t } = useTranslation();
+
   const {
     register,
     onSubmit,
@@ -21,54 +25,62 @@ export const GameForm = () => {
     fields,
     field,
     setField,
+    serverError,
+    setServerError,
+    errors,
   } = useGameForm();
 
   return (
     <div className={classes.paper}>
       <Avatar className={classes.avatar}>{<AddCircleIcon />}</Avatar>
       <Typography component="h1" variant="h5">
-        Создать игру
+        {t("form.gameForm.createTitle")}
       </Typography>
       <FormProvider {...formMethods}>
         <form className={classes.form} noValidate onSubmit={onSubmit}>
           <div>
             <TextField
               id="description"
-              label="Описание"
+              label={t("form.gameForm.description")}
               multiline
               rows={4}
               className={classes.fullwidthField}
               variant="outlined"
               name="description"
-              inputRef={register}
+              inputRef={register()}
             />
           </div>
           <div>
             <FormSelect
               name="reg"
-              label="Регистрация"
+              label={t("form.gameForm.registration")}
               className={classes.field}
               options={[
-                { id: "opened", label: "Открыта" },
-                { id: "closed", label: "Закрыта" },
-                { id: "byRequest", label: "По запросу" },
+                { id: "opened", label: t("form.gameForm.regType.open") },
+                { id: "closed", label: t("form.gameForm.regType.closed") },
+                { id: "byRequest", label: t("form.gameForm.regType.request") },
               ]}
+              required
             />
 
             <TextField
               className={classes.field}
-              label="Цена"
+              label={t("form.gameForm.price")}
               id="price"
               variant="outlined"
               name="price"
               type="number"
-              inputRef={register}
+              inputRef={register({
+                required: t("error.required") as string,
+              })}
+              error={errors.price}
+              helperText={errors?.price?.message}
             />
           </div>
           <div>
             <TextField
               className={classes.field}
-              label="Возраст от"
+              label={t("form.gameForm.ageFrom")}
               id="ageFrom"
               variant="outlined"
               name="ageFrom"
@@ -77,29 +89,36 @@ export const GameForm = () => {
             />
             <TextField
               className={classes.field}
-              label="Возраст до"
+              label={t("form.gameForm.ageTo")}
               id="ageTo"
               variant="outlined"
               name="ageTo"
               type="number"
               inputRef={register}
+              error={errors.ageTo}
+              helperText={errors?.ageTo?.message}
             />
           </div>
           <div>
             <FormSelect
               name="gender"
-              label="Пол"
+              label={t("form.gameForm.sex")}
               className={classes.field}
               options={[
-                { id: "", label: "Любой" },
-                { id: "m", label: "Мужской" },
-                { id: "f", label: "Женский" },
+                { id: "", label: t("form.gameForm.any") },
+                { id: "m", label: t("form.gameForm.male") },
+                { id: "f", label: t("form.gameForm.female") },
               ]}
+              inputRef={register({
+                required: t("error.required") as string,
+              })}
+              error={errors.gender}
+              helperText={errors?.gender?.message}
             />
 
             <FormSelect
               name="size"
-              label="Количество игроков"
+              label={t("form.gameForm.size")}
               className={classes.field}
               options={[
                 { id: 4, label: "4х4" },
@@ -109,6 +128,11 @@ export const GameForm = () => {
                 { id: 8, label: "8х8" },
                 { id: 9, label: "9х9" },
               ]}
+              inputRef={register({
+                required: t("error.required") as string,
+              })}
+              error={errors.size}
+              helperText={errors?.size?.message}
             />
           </div>
 
@@ -116,14 +140,18 @@ export const GameForm = () => {
             <TextField
               className={classes.field}
               id="datetime-local"
-              label="Дата и время"
+              label={t("form.gameForm.dateAndTime")}
               type="datetime-local"
               variant="outlined"
               InputLabelProps={{
                 shrink: true,
               }}
               name="startDate"
-              inputRef={register}
+              inputRef={register({
+                required: t("error.required") as string,
+              })}
+              error={errors.startDate}
+              helperText={errors?.startDate?.message}
             />
             <Autocomplete
               className={classes.field}
@@ -137,9 +165,9 @@ export const GameForm = () => {
                 return (
                   <TextField
                     {...params}
-                    value={"SHIT"}
-                    label="Поле/Адрес"
+                    label={t("form.gameForm.fieldAndAddress")}
                     variant="outlined"
+                    value=""
                   />
                 );
               }}
@@ -164,10 +192,23 @@ export const GameForm = () => {
             color="primary"
             className={classes.submit}
           >
-            Создать
+            {t("action.create")}
           </Button>
         </form>
       </FormProvider>
+      <Snackbar
+        style={{
+          maxWidth: 400,
+        }}
+        open={!!serverError}
+        autoHideDuration={6000}
+        onClose={() => setServerError(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <MuiAlert elevation={6} variant="standard" severity="error">
+          {serverError?.[0].message}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 };

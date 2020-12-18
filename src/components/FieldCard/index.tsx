@@ -15,14 +15,13 @@ import { useHistory } from "react-router-dom";
 import { hoursMinsFormatter } from "../../utils";
 import { MarkerMap } from "../UI/MarkerMap";
 import { ImageBrowser } from "../UI";
+import { useTranslation } from "react-i18next";
 
 interface ListItemProps {
   name: string;
   value: string;
   divider: boolean;
 }
-
-
 
 const FieldListItem: FC<ListItemProps> = ({ name, value, divider }) => {
   const classes = useStyles();
@@ -57,6 +56,7 @@ interface IProps {
 
 export const FieldCard: FC<IProps> = ({ data }: IProps) => {
   const classes = useStyles();
+  const { t } = useTranslation();
   const history = useHistory();
   const imgs = data?.files;
 
@@ -76,7 +76,7 @@ export const FieldCard: FC<IProps> = ({ data }: IProps) => {
                   >
                     {data?.name || "-"}
                   </Typography>
-                  <Tooltip title="Редактировать">
+                  <Tooltip title={t("action.edit") as string}>
                     <IconButton
                       aria-label="edit"
                       onClick={() => history.push(`/field/edit/${data.id}`)}
@@ -98,13 +98,13 @@ export const FieldCard: FC<IProps> = ({ data }: IProps) => {
 
         <FieldListItem name="Id" value={data?.id || "-"} divider={true} />
         <FieldListItem
-          name="Описание"
+          name={t("field.fields.description")}
           value={data?.description || "-"}
           divider={true}
         />
 
         <FieldListItem
-          name="Адрес"
+          name={t("field.fields.address")}
           value={data?.address || "-"}
           divider={true}
         />
@@ -122,24 +122,32 @@ export const FieldCard: FC<IProps> = ({ data }: IProps) => {
         )}
 
         <FieldListItem
-          name="Крытое/открытое"
+          name={t("field.fields.indoor")}
           value={data?.roof ? "Да" : "Нет"}
           divider={true}
         />
         <FieldListItem
-          name="Цена"
+          name={t("field.fields.price")}
           value={data?.price?.toString() || "-"}
           divider={true}
         />
         <FieldListItem
-          name="Телефон"
+          name={t("field.fields.phoneNumber")}
           value={data?.phone || "-"}
           divider={true}
         />
-        <FieldListItem name="Email" value={data?.email || "-"} divider={true} />
-        <FieldListItem name="Размер" value={data?.size || "-"} divider={true} />
         <FieldListItem
-          name="Часы работы"
+          name={t("field.fields.email")}
+          value={data?.email || "-"}
+          divider={true}
+        />
+        <FieldListItem
+          name={t("field.fields.size")}
+          value={data?.size || "-"}
+          divider={true}
+        />
+        <FieldListItem
+          name={t("field.fields.workingHours")}
           value={`${
             data?.fromTime ? hoursMinsFormatter(data.fromTime) : ""
           } - ${data?.toTime ? hoursMinsFormatter(data.toTime) : ""}`}

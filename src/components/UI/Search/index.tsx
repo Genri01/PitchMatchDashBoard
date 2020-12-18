@@ -7,12 +7,14 @@ interface IProps {
   value?: string;
   onChange: Function;
   slight?: boolean;
+  placeholder?: string;
 }
 
 export const Search: FC<IProps> = ({
   value = "",
   onChange,
   slight = false,
+  placeholder = "",
 }) => {
   const classes = useStyles({ slight });
 
@@ -22,7 +24,7 @@ export const Search: FC<IProps> = ({
         <SearchIcon />
       </div>
       <InputBase
-        placeholder="Поиск…"
+        placeholder={placeholder}
         classes={{
           root: classes.inputRoot,
           input: classes.inputInput,

@@ -1,5 +1,4 @@
-import { Button, createStyles, makeStyles, Theme } from "@material-ui/core";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import { createStyles, makeStyles, Theme } from "@material-ui/core";
 
 import React, { FC } from "react";
 
@@ -24,7 +23,7 @@ type UploadButtonProps = React.DetailedHTMLProps<
   HTMLInputElement
 >;
 
-export const UploadButton: FC<UploadButtonProps> = (props) => {
+export const UploadButton: FC<UploadButtonProps> = ({ children, ...props }) => {
   const classes = useStyles();
 
   return (
@@ -37,17 +36,7 @@ export const UploadButton: FC<UploadButtonProps> = (props) => {
         type="file"
         {...props}
       />
-      <label htmlFor="contained-button-file">
-        <Button
-          variant="outlined"
-          color="default"
-          component="span"
-          className={classes.button}
-          startIcon={<CloudUploadIcon />}
-        >
-          Загрузить фото
-        </Button>
-      </label>
+      <label htmlFor="contained-button-file">{children}</label>
     </div>
   );
 };

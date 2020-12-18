@@ -1,0 +1,146 @@
+{
+    "game": {
+        "fields": {
+            "id": "Id",
+            "address": "Address",
+            "description": "Description",
+            "dateAndTime": "Date & Time",
+            "size": "Number of players",
+            "status": "Status",
+            "price": "Price per person",
+            "creator": "Game Creator",
+            "ageFromTo": "Age: from - to"
+        }
+    },
+    "field": {
+        "fields": {
+            "id": "Id",
+            "name": "Name",
+            "description": "Description",
+            "address": "Address",
+            "indoor": "Indoor",
+            "price": "Price per person",
+            "phoneNumber": "Phone number",
+            "email": "Email",
+            "size": "Size",
+            "workingHours": "Open from - to"
+        }
+    },
+    "user": {
+        "fields": {
+            "id": "Id",
+            "name": "Name",
+            "attendGames": "Attended",
+            "orgGames": "Organised",
+            "birthday": "Date of Birth",
+            "gender": "Gender",
+            "phoneNumber": "Phone number",
+            "email": "Email",
+            "picture": "Photo",
+            "prefferedPosition": "prefferedPosition",   
+            "bannedAt": "bannedAt",
+            "banReason": "banReason",
+            "ratingScore": "ratingScore",
+            "ratingTotal": "ratingTotal",
+            "attendyScore": "attendyScore",
+            "attendyTotal": "attendyTotal",
+            "checkinRating": "checkinRating",
+            "commercialFrom": "commercialFrom"
+        }
+    },
+    
+    "form": {
+        "fieldForm": {
+            "createTitle": "Create Field",
+            "editTitle": "Edit Field",
+            "name": "Name",
+            "description": "Description",
+            "address": "Address",
+            "price": "Price per person",
+            "phoneNumber": "Phone number",
+            "email": "Email",
+            "openFrom": "Open from",
+            "openTo": "Open to",
+            "size": "Size",
+            "indoor": "Indoor",
+            "latitude": "Latitude",
+            "longitude": "Longitude"
+        },
+        "gameForm": {
+            "createTitle": "Create Game",
+            "description": "Description",
+            "registration": "Registration",
+            "regType": {
+                "open": "Open",
+                "closed": "Closed",
+                "request": "Request"
+            },
+            "price": "Price per person",
+            "ageFrom": "Age from",
+            "ageTo": "Age to",
+            "sex": "Sex",
+            "male": "Male",
+            "female": "Female",
+            "any": "Any",
+            "size": "Number of players",
+            "dateAndTime": "Date & Time",
+            "fieldAndAddress": "Field/Address"
+        },
+        "calendarFilter": {
+            "filter": "Filter",
+            "new": "New",
+            "confirmed": "Confirmed",
+            "rejected": "Rejected",
+            "finished": "Finished",
+            "applyFilter": "Apply Filter"
+        },
+        "login": {
+            "title": "Sign in",
+            "login": "Login",
+            "password": "Password",
+            "submit": "Sign in"
+        }
+    },
+    "action": {
+        "create": "Create",
+        "edit": "Edit",
+        "uploadPhoto": "Upload Photo",
+        "crop": "Crop",
+        "rotate": "Rotate",
+        "zoom": "Zoom",
+        "select": "Select",
+        "search": "Search",
+        "confirm": "Confirm",
+        "cancel": "Cancel",
+        "downloadExcel": "Download in Excel",
+        "goTo": "Open"
+    },
+    "error": {
+        "required": "Field is required",
+        "email": "Please enter an email address"
+    },
+    "table": {
+        "users":"Users",
+        "fields":"Fields",
+        "games":"Games"
+    },
+    "tab": {
+        "gamesBookings": "Games/Bookings",
+        "users": "Users",
+        "fields": "Fields"
+    },
+    "page": {
+        "allFields": "All fields",
+        "field": "Field",
+        "createField": "Create field",
+
+        "allUsers": "All users",
+        "user": "User",
+
+        "allGames": "All games",
+        "game": "Game",
+        "createGame": "Create game",
+        "calendar": "Calendar"
+    }
+    
+}

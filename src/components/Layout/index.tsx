@@ -14,8 +14,10 @@ import { Box, IconButton, ListSubheader } from "@material-ui/core";
 import Badge from "@material-ui/core/Badge";
 
 import { useStyles } from "./styles";
-import { MENU_ITEMS, MENU_ITEMS_ARR, MenuItem } from "../../constants";
+import { MenuItem, useMenuItems } from "../../constants";
 import { GamesContext, UserContext } from "../../contexts";
+import { LangToggle } from "..";
+import { useTranslation } from "react-i18next";
 
 interface NavLinkProps {
   item: MenuItem;
@@ -35,12 +37,14 @@ const NavLink: FC<NavLinkProps> = ({ item }) => (
 
 export const Layout: FC = ({ children }) => {
   const classes = useStyles();
+  const { t } = useTranslation();
+  const { MENU_ITEMS, MENU_ITEMS_ARR } = useMenuItems();
   const { pathname } = useLocation();
   const { logout } = useContext(UserContext);
   const title = MENU_ITEMS_ARR.find((el) => el.path === pathname)?.name || "";
 
   const { games } = useContext(GamesContext);
-  const unconfirmedGames = games.filter((el) => el.status != "confirmed");
+  const unconfirmedGames = games.filter((el) => el.status == "new");
 
   return (
     <div className={classes.root}>
@@ -51,9 +55,12 @@ export const Layout: FC = ({ children }) => {
             <Typography variant="h6" display="inline" noWrap>
               {title}
             </Typography>
-            <IconButton aria-label="logout" onClick={() => logout()}>
-              <ExitToAppIcon />
-            </IconButton>
+            <Box className={classes.headerActionsContainer}>
+              <LangToggle />
+              <IconButton aria-label="logout" onClick={() => logout()}>
+                <ExitToAppIcon />
+              </IconButton>
+            </Box>
           </Box>
         </Toolbar>
       </AppBar>
@@ -75,14 +82,14 @@ export const Layout: FC = ({ children }) => {
         </Typography>
         <Divider />
         <List>
-          <ListSubheader>Игры/бронирования</ListSubheader>
+          <ListSubheader>{t("tab.gamesBookings")}</ListSubheader>
           <Link
             to={"/calendar"}
             style={{ textDecoration: "none", color: "inherit" }}
             key={"calendar"}
           >
             <ListItem button>
-              <ListItemText primary={"Календарь"} />
+              <ListItemText primary={t("page.calendar")} />
               <Badge
                 badgeContent={unconfirmedGames?.length}
                 className={classes.badge}
@@ -96,7 +103,7 @@ export const Layout: FC = ({ children }) => {
         </List>
         <Divider />
         <List>
-          <ListSubheader>Пользователи</ListSubheader>
+          <ListSubheader>{t("tab.users")}</ListSubheader>
 
           {MENU_ITEMS.USER.filter((el) => el.displayInMenu).map((menuItem) => (
             <NavLink item={menuItem} key={menuItem.name} />
@@ -104,7 +111,7 @@ export const Layout: FC = ({ children }) => {
         </List>
         <Divider />
         <List>
-          <ListSubheader>Поля</ListSubheader>
+          <ListSubheader>{t("tab.fields")}</ListSubheader>
 
           {MENU_ITEMS.FIELD.filter((el) => el.displayInMenu).map((menuItem) => (
             <NavLink item={menuItem} key={menuItem.name} />

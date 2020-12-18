@@ -23,6 +23,8 @@ import { useStyles, useToolbarStyles } from "./styles";
 import { Order, stableSort, getComparator } from "./funcs";
 import { searchFilter, SearchFilterFunc } from "../../utils";
 import { Link, Search } from "../UI";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -120,20 +122,32 @@ interface IProps<T> {
   data: T[];
   title: string;
   headCells: HeadCell<T>[];
+  routeBasename: string;
+  pageNum?: number;
+  rowsPerPage?: number;
 }
 
-export function Table<T>({ title, data = [], headCells }: IProps<T>) {
+export function Table<T>({
+  title,
+  data = [],
+  headCells,
+  pageNum = 0,
+  rowsPerPage: defaultRowsPerPage = 10,
+  routeBasename,
+}: IProps<T>) {
   const classes = useStyles();
+  const { t } = useTranslation();
   const componentRef = useRef();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current as any,
   }) as Function;
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState("");
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(pageNum);
+  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchItems, setSearchItems] = useState({} as any);
+  const history = useHistory();
 
   const separateSearchFuncs: { [key: string]: Function } = headCells.reduce(
     (acc, cur) => {
@@ -171,13 +185,16 @@ export function Table<T>({ title, data = [], headCells }: IProps<T>) {
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
+    history.push(`/${routeBasename}/${newPage}/${rowsPerPage}`);
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    const newRowsNum = parseInt(event.target.value, 10);
+    setRowsPerPage(newRowsNum);
     setPage(0);
+    history.push(`/${routeBasename}/${0}/${newRowsNum}`);
   };
 
   const emptyRows =
@@ -189,7 +206,7 @@ export function Table<T>({ title, data = [], headCells }: IProps<T>) {
         <EnhancedTableToolbar title={title}>
           <ExcelFile
             element={
-              <Tooltip title="Скачать EXCEL">
+              <Tooltip title={t("action.downloadExcel") as string}>
                 <IconButton aria-label="download excel">
                   <GetAppIcon />
                 </IconButton>
@@ -214,7 +231,11 @@ export function Table<T>({ title, data = [], headCells }: IProps<T>) {
             </IconButton>
           </Tooltip>
           <div className={classes.mainSearchWrapper}>
-            <Search value={searchQuery} onChange={setSearchQuery} />
+            <Search
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder={`${t("action.search")}…`}
+            />
           </div>
         </EnhancedTableToolbar>
         <TableContainer ref={componentRef as any}>

@@ -1,0 +1,144 @@
+{
+    "game": {
+        "fields": {
+            "id": "Id",
+            "address": "Адрес",
+            "description": "Описание",
+            "dateAndTime": "Дата и время",
+            "size": "Количество игроков",
+            "status": "Статус",
+            "price": "Цена на человека",
+            "creator": "Создатель игры",
+            "ageFromTo": "Возраст: от - до"
+        }
+    },
+    "field": {
+        "fields": {
+            "id": "Id",
+            "name": "Наименование поля",
+            "description": "Описание",
+            "address": "Адрес",
+            "indoor": "В помещении",
+            "price": "Цена на человека",
+            "phoneNumber": "Телефон",
+            "email": "Email",
+            "size": "Размер",
+            "workingHours": "Работает от - до"
+        }
+    },
+    "user": {
+        "fields": {
+            "id": "Id",
+            "name": "Имя",
+            "attendGames": "Посещаемость",
+            "orgGames": "Организованный",
+            "birthday": "Дата рождения",
+            "gender": "Пол",
+            "phoneNumber": "Телефон",
+            "email": "Email",
+            "picture": "“Фото”",
+            "prefferedPosition": "prefferedPosition",   
+            "bannedAt": "bannedAt",
+            "banReason": "banReason",
+            "ratingScore": "ratingScore",
+            "ratingTotal": "ratingTotal",
+            "attendyScore": "attendyScore",
+            "attendyTotal": "attendyTotal",
+            "checkinRating": "checkinRating",
+            "commercialFrom": "commercialFrom"
+        }
+    },
+    "form": {
+        "fieldForm": {
+            "createTitle": "Создать поле",
+            "editTitle": "Изменить поле",
+            "name": "Наименование поля",
+            "description": "Описание",
+            "address": "Адрес",
+            "price": "Цена на человека",
+            "phoneNumber": "Телефон",
+            "email": "Email",
+            "openFrom": "Работает от",
+            "openTo": "Работает до",
+            "size": "Размер",
+            "indoor": "в помещении",
+            "latitude": "Широта",
+            "longitude": "Долгота"
+        },
+        "gameForm": {
+            "createTitle": "Создать игру",
+            "description": "Описание",
+            "registration": "Регистрация",
+            "regType": {
+                "open": "Открыта",
+                "closed": "Закрыта",
+                "request": "По запросу"
+            },
+            "price": "Цена на человека",
+            "ageFrom": "Возраст от",
+            "ageTo": "Возраст до",
+            "sex": "Пол",
+            "male": "Мужской",
+            "female": "Женский",
+            "any": "Любой",
+            "size": "Количество игроков",
+            "dateAndTime": "Дата и время",
+            "fieldAndAddress": "Поле/Адрес"
+        },
+        "calendarFilter": {
+            "filter": "Фильтр",
+            "new": "Новая",
+            "confirmed": "Подтвержденная",
+            "rejected": "Отклоненная",
+            "finished": "Завершенные",
+            "applyFilter": "Применить"
+        },
+        "login": {
+            "title": "Войти в аккаунт",
+            "login": "Логин",
+            "password": "Пароль",
+            "submit": "Войти"
+        }
+    },
+    "action": {
+        "create": "Создать",
+        "edit": "Редактировать",
+        "uploadPhoto": "Загрузить фото",
+        "crop": "Обрезать",
+        "rotate": "Поворот",
+        "zoom": "Зум",
+        "select": "Выбрать",
+        "search": "Поиск",
+        "confirm": "Подтвердить",
+        "cancel": "Отклонить",
+        "downloadExcel": "Скачать в Excel",
+        "goTo": "Перейти"
+    },
+    "error": {
+        "required": "Обязательное поле",
+        "email": "Введен не корректный e-mail"
+    },
+    "table": {
+        "users":"Пользователи",
+        "fields":"Поля",
+        "games":"Игры"
+    },
+    "tab": {
+        "gamesBookings": "Игры/Бронирования",
+        "users": "Пользователи",
+        "fields": "Поля"
+    },
+    "page": {
+        "allFields": "Все поля",
+        "field": "Cтраница поля",
+        "createField": "Создать поле",
+
+        "allUsers": "Все пользователи",
+        "user": "Cтраница пользователя",
+
+        "allGames": "Все игры",
+        "game": "Cтраница игры",
+        "createGame": "Создать игру",
+        "calendar": "Календарь"
+    }
+}

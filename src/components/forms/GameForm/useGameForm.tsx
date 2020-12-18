@@ -11,11 +11,12 @@ import {
 } from "../../../generated/apolloComponents";
 
 export const useGameForm = () => {
-  const formMethods = useForm();
-  const { handleSubmit, register, control } = formMethods;
+  const formMethods = useForm({ mode: "onChange" });
+  const { handleSubmit, register, control, errors } = formMethods;
   const [upsertGame] = useUpsertGameMutation();
   const history = useHistory();
   const { refetchGames } = useContext(GamesContext);
+  const [serverError, setServerError] = useState<any>();
 
   const [field, setField] = useState<Place | null>();
   const { data } = useMapFieldsQuery({
@@ -45,7 +46,9 @@ export const useGameForm = () => {
         history.push(`/game/${resId}`);
       }
       refetchGames();
-    } catch (err) {}
+    } catch (err) {
+      setServerError(err.networkError.result.errors);
+    }
   };
 
   return {
@@ -56,5 +59,8 @@ export const useGameForm = () => {
     fields,
     field,
     setField,
+    serverError,
+    setServerError,
+    errors,
   };
 };

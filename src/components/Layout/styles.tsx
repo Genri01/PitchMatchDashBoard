@@ -40,5 +40,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     badge: {
       margin: theme.spacing(2),
     },
+
+    headerActionsContainer: {
+      display: "flex",
+      alignItems: "center",
+      gap: "13px",
+    },
   })
 );

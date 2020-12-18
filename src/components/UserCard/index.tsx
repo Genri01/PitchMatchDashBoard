@@ -8,6 +8,7 @@ import { Box, Paper } from "@material-ui/core";
 
 import { UserStats } from "../../generated/apolloComponents";
 import { useStyles } from "./style";
+import { useTranslation } from "react-i18next";
 
 interface ListItemProps {
   name: string;
@@ -48,6 +49,7 @@ interface IProps {
 
 export const UserCard: FC<IProps> = ({ data }: IProps) => {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const imgUrl = data.user?.avatar?.url;
   const { user } = data;
@@ -92,67 +94,67 @@ export const UserCard: FC<IProps> = ({ data }: IProps) => {
 
         <UserListItem name="Id" value={user?.id || "-"} divider={true} />
         <UserListItem
-          name="attendGames"
+          name={t("user.fields.attendGames")}
           value={data.attendGames?.toString() || "-"}
           divider={true}
         />
         <UserListItem
-          name="orgGames"
+          name={t("user.fields.orgGames")}
           value={data.orgGames?.toString() || "-"}
           divider={true}
         />
         <UserListItem
-          name="birthday"
+          name={t("user.fields.birthday")}
           value={user?.birthday ? new Date(user.birthday).toDateString() : "-"}
           divider={true}
         />
         <UserListItem
-          name="gender"
+          name={t("user.fields.gender")}
           value={user?.gender || "-"}
           divider={true}
         />
         <UserListItem
-          name="prefferedPosition"
+          name={t("user.fields.prefferedPosition")}
           value={user?.prefferedPosition || "-"}
           divider={true}
         />
         <UserListItem
-          name="bannedAt"
+          name={t("user.fields.bannedAt")}
           value={user?.bannedAt || "-"}
           divider={true}
         />
         <UserListItem
-          name="banReason"
+          name={t("user.fields.banReason")}
           value={user?.banReason || "-"}
           divider={true}
         />
         <UserListItem
-          name="ratingScore"
+          name={t("user.fields.ratingScore")}
           value={user?.ratingScore?.toString() || "-"}
           divider={true}
         />
         <UserListItem
-          name="ratingTotal"
+          name={t("user.fields.ratingTotal")}
           value={user?.ratingTotal?.toString() || "-"}
           divider={true}
         />
         <UserListItem
-          name="attendyScore"
+          name={t("user.fields.attendyScore")}
           value={user?.attendyScore?.toString() || "-"}
           divider={true}
         />
         <UserListItem
-          name="attendyTotal"
+          name={t("user.fields.attendyTotal")}
           value={user?.attendyTotal?.toString() || "-"}
           divider={true}
         />
         <UserListItem
-          name="checkinRating"
+          name={t("user.fields.checkinRating")}
           value={user?.checkinRating?.toString() || "-"}
           divider={true}
         />
         <UserListItem
-          name="birthday"
+          name={t("user.fields.commercialFrom")}
           value={
             user?.commercialFrom
               ? new Date(user.commercialFrom).toDateString()

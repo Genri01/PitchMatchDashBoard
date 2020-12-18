@@ -12,10 +12,10 @@ export const getGameStatusBadgeColor = (status: string) => {
   switch (status) {
     case "new":
       return "darkorange";
-    case "cancelled":
-      return "#ff3066";
     case "confirmed":
       return "limegreen";
+    case "cancelled":
+      return "#ff3066";
     case "finished":
       return "#e0e0e0";
 
