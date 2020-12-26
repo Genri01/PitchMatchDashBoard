@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-
 export interface MenuItem {
   name: string;
   path: string;
@@ -8,8 +7,13 @@ export interface MenuItem {
 
 export const useMenuItems = () => {
   const { t } = useTranslation();
+
   const FIELD_ITEMS: MenuItem[] = [
-    { name: t("page.allFields"), path: "/fields", displayInMenu: true },
+    {
+      name: t("page.fields"),
+      path: "/fields",
+      displayInMenu: true,
+    },
     { name: t("page.field"), path: "/field", displayInMenu: false },
     { name: t("page.createField"), path: "/field/create", displayInMenu: true },
   ];
@@ -26,11 +30,22 @@ export const useMenuItems = () => {
     { name: t("page.calendar"), path: "/calendar", displayInMenu: false },
   ];
 
-  const MENU_ITEMS_ARR = [...FIELD_ITEMS, ...USER_ITEMS, ...GAME_ITEMS];
+  const SETTINGS_ITEMS: MenuItem[] = [
+    { name: t("page.accesses"), path: "/access", displayInMenu: true },
+  ];
+
+  const MENU_ITEMS_ARR = [
+    ...FIELD_ITEMS,
+    ...USER_ITEMS,
+    ...GAME_ITEMS,
+    ...SETTINGS_ITEMS,
+  ];
+
   const MENU_ITEMS = {
     FIELD: FIELD_ITEMS,
     GAME: GAME_ITEMS,
     USER: USER_ITEMS,
+    SETTINGS: SETTINGS_ITEMS,
   };
 
   return {

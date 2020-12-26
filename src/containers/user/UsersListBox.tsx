@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Table } from "../../components";
@@ -16,7 +17,9 @@ export const UsersListBox = () => {
     attendGames: el.attendGames,
     orgGames: el.orgGames,
     name: `${user?.lastName || ""} ${user?.firstName || ""}`,
-    birthday: user?.birthday ? new Date(user.birthday).toDateString() : "",
+    birthday: user?.birthday
+      ? format(new Date(user?.birthday), "yyyy-MM-dd")
+      : "",
     gender: user?.gender,
     phone: user?.phone,
     email: user?.email,

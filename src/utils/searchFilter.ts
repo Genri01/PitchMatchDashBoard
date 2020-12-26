@@ -1,33 +1,35 @@
+import { REGEX } from "../constants";
+
 export type SearchFilterFunc = (el: any) => any;
 
-export const searchFilter = (
+export type FilterType = "search" | "numberRange" | "dateRange";
+
+export const filterItems = (
   searchTerm: string,
   items: Array<any>,
-  searchProps: Array<string> | Array<SearchFilterFunc>
+  propExtractors: Array<SearchFilterFunc>,
+  filterType: FilterType
 ) => {
   const strTranform = (str: string) => str?.toLocaleLowerCase().trim();
 
-  if (searchProps.length && searchTerm) {
+  if (propExtractors.length && searchTerm) {
     searchTerm = strTranform(searchTerm);
-    if (typeof searchProps[0] === "string") {
+    if (typeof propExtractors[0] === "function") {
       items = items.filter((el) => {
-        for (let propName in el) {
-          // @ts-ignore
-          if (searchProps.includes(propName)) {
-            if (strTranform(el[propName]).includes(searchTerm)) {
+        for (let propExtracter of propExtractors) {
+          if (filterType == "search") {
+            // @ts-ignore
+            if (strTranform(propExtracter(el)).includes(searchTerm)) {
               return true;
             }
-          }
-        }
+          } else if (filterType == "numberRange") {
+            const regexRes = REGEX.NUMBER_RANGE.exec(searchTerm);
+            if (!regexRes) return true;
 
-        return false;
-      });
-    } else if (typeof searchProps[0] === "function") {
-      items = items.filter((el) => {
-        for (let propExtracter of searchProps) {
-          // @ts-ignore
-          if (strTranform(propExtracter(el)).includes(searchTerm)) {
-            return true;
+            const low = parseInt(regexRes[1]);
+            const high = parseInt(regexRes[2]);
+            const val = parseInt(propExtracter(el));
+            return val >= low && val <= high;
           }
         }
 

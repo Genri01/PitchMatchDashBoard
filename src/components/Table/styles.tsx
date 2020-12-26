@@ -5,7 +5,17 @@ export const useToolbarStyles = makeStyles((theme: Theme) =>
     root: {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(1),
+      overflow: "scroll",
+      display: "flex",
+      justifyContent: "space-between",
     },
+
+    toolbarActionsWrapper: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+
     highlight:
       theme.palette.type === "light"
         ? {
@@ -16,9 +26,7 @@ export const useToolbarStyles = makeStyles((theme: Theme) =>
             color: theme.palette.text.primary,
             backgroundColor: theme.palette.secondary.dark,
           },
-    title: {
-      flex: "1 1 100%",
-    },
+    title: {},
   })
 );
 
@@ -51,6 +59,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     mainSearchWrapper: {
       marginRight: theme.spacing(1),
+      minWidth: 150,
     },
     profilePic: {
       height: "40px",

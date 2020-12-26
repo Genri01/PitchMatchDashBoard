@@ -1,9 +1,15 @@
 import React from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText,
+} from "@material-ui/core";
 
-const MuiSelect = (props) => {
+export const MuiSelect = (props) => {
   const { label, name, options } = props;
 
   const controllerProps = { ...props };
@@ -14,24 +20,33 @@ const MuiSelect = (props) => {
       fullWidth={true}
       variant="outlined"
       className={props.className}
+      required={props.required}
+      error={props.error}
+      size={props.size}
     >
       <InputLabel htmlFor={name}>{label}</InputLabel>
       <Select id={name} {...controllerProps}>
+        {props.noneOption && (
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+        )}
+
         {options.map((item) => (
           <MenuItem key={item.id} value={item.id}>
             {item.label}
           </MenuItem>
         ))}
       </Select>
+      <FormHelperText>{props?.helperText}</FormHelperText>
     </FormControl>
   );
 };
 
 export function FormSelect(props) {
   const { control } = useFormContext();
-  const { name, label, options } = props;
-  const className = props.className;
 
+  const className = props.className;
   const controllerProps = { ...props };
   delete controllerProps.className;
 
@@ -40,9 +55,6 @@ export function FormSelect(props) {
       <Controller
         as={<MuiSelect className={className} />}
         control={control}
-        name={name}
-        label={label}
-        options={options}
         defaultValue=""
         {...controllerProps}
       />

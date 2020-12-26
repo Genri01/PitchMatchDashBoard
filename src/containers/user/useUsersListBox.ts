@@ -1,5 +1,8 @@
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { HeadCell } from "../../components";
+import { UserContext } from "../../contexts";
+import { ROLES } from "../../utils";
 
 export interface TableUser {
   id: string;
@@ -15,6 +18,8 @@ export interface TableUser {
 
 export const useUsersListBox = () => {
   const { t } = useTranslation();
+  const { me } = useContext(UserContext);
+
   const headCells: HeadCell<TableUser>[] = [
     {
       id: "id",
@@ -23,22 +28,22 @@ export const useUsersListBox = () => {
     },
     {
       id: "profilePic",
-      label: "Picture",
       isImage: true,
+      label: t("user.fields.picture"),
     },
     {
       id: "name",
       exportable: true,
       isItemLink: true,
       linkFormatter: (el: TableUser) => `/user/${el.id}`,
-      withSeparateSearch: true,
+      filter: { type: "search" },
       valueGetter: (el: TableUser) => el?.name || "",
       label: t("user.fields.name"),
     },
     {
       id: "attendGames",
       exportable: true,
-      withSeparateSearch: true,
+      filter: { type: "search" },
       valueGetter: (el: TableUser) =>
         el?.attendGames ? el.attendGames.toString() : "",
       label: t("user.fields.attendGames"),
@@ -46,7 +51,7 @@ export const useUsersListBox = () => {
     {
       id: "orgGames",
       exportable: true,
-      withSeparateSearch: true,
+      filter: { type: "search" },
       valueGetter: (el: TableUser) =>
         el?.orgGames ? el.orgGames.toString() : "",
       label: t("user.fields.orgGames"),
@@ -54,34 +59,46 @@ export const useUsersListBox = () => {
     {
       id: "birthday",
       exportable: true,
-      withSeparateSearch: true,
+      filter: { type: "search" },
       valueGetter: (el: TableUser) => el?.birthday || "",
       label: t("user.fields.birthday"),
     },
     {
       id: "email",
       exportable: true,
-      withSeparateSearch: true,
+      filter: { type: "search" },
       valueGetter: (el: TableUser) => el?.email || "",
       label: t("user.fields.email"),
     },
     {
       id: "phone",
       exportable: true,
-      withSeparateSearch: true,
+      filter: { type: "search" },
       valueGetter: (el: TableUser) => el?.phone || "",
       label: t("user.fields.phoneNumber"),
     },
     {
       id: "gender",
       exportable: true,
-      withSeparateSearch: true,
-      valueGetter: (el: TableUser) => el?.gender || "",
+      filter: {
+        type: "select",
+        options: [t("user.fields.maleShort"), t("user.fields.femaleShort")],
+      },
+      valueGetter: (el: TableUser) =>
+        el?.gender == "m"
+          ? t("user.fields.maleShort")
+          : el?.gender == "f"
+          ? t("user.fields.femaleShort")
+          : "",
       label: t("user.fields.gender"),
     },
   ];
 
+  const premittedHeadCells = headCells.filter((el) =>
+    ROLES.shouldBeDisplayed.user[el.id](me)
+  );
+
   return {
-    headCells,
+    headCells: premittedHeadCells,
   };
 };

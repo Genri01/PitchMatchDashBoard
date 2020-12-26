@@ -7,8 +7,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    width: 635,
+    maxWidth: 635,
     margin: "auto",
+    marginBottom: 50,
   },
   avatar: {
     margin: theme.spacing(1),
@@ -23,18 +24,15 @@ export const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
 
     "& .MuiTextField-root": {
-      margin: theme.spacing(1),
       width: 300,
     },
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
-    width: 620,
+    width: "100%",
   },
   imageUploaderWrapper: {
     display: "flex",
     justifyContent: "center",
-    margin: theme.spacing(2, 0, 0),
     width: "97%",
   },
   mapWrapper: {

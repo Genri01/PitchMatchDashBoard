@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
-import { GamesContext } from "../../../contexts";
+import { GamesContext, UserContext } from "../../../contexts";
 
 import {
   GameInput,
@@ -9,17 +9,20 @@ import {
   useMapFieldsQuery,
   useUpsertGameMutation,
 } from "../../../generated/apolloComponents";
+import { ROLES } from "../../../utils";
 
 export const useGameForm = () => {
   const formMethods = useForm({ mode: "onChange" });
-  const { handleSubmit, register, control, errors } = formMethods;
+  const { handleSubmit, register, control, errors, formState } = formMethods;
   const [upsertGame] = useUpsertGameMutation();
   const history = useHistory();
+  const { me } = useContext(UserContext);
   const { refetchGames } = useContext(GamesContext);
   const [serverError, setServerError] = useState<any>();
 
   const [field, setField] = useState<Place | null>();
   const { data } = useMapFieldsQuery({
+    variables: { filter: ROLES.isManager(me) ? { userId: me!.id } : {} },
     errorPolicy: "ignore",
   });
 
@@ -36,6 +39,7 @@ export const useGameForm = () => {
         ageTo: toNum(data.ageTo),
         placeId: field?.id,
         address: field?.address,
+        teamSeparation: "manual",
       };
 
       const res = await upsertGame({
@@ -47,7 +51,11 @@ export const useGameForm = () => {
       }
       refetchGames();
     } catch (err) {
-      setServerError(err.networkError.result.errors);
+      if (err?.networkError?.result?.errors) {
+        setServerError(err.networkError.result.errors);
+      } else {
+        console.log("err :>> ", err);
+      }
     }
   };
 
@@ -62,5 +70,6 @@ export const useGameForm = () => {
     serverError,
     setServerError,
     errors,
+    formState,
   };
 };

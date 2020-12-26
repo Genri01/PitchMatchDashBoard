@@ -11,6 +11,9 @@ import { GamesContextProvider, UserContextProvider } from "./contexts";
 
 import "leaflet/dist/leaflet.css";
 import "react-leaflet-markercluster/dist/styles.min.css";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { ruRU, enUS } from "@material-ui/core/locale";
+import { useTranslation } from "react-i18next";
 
 const link = createUploadLink({
   uri: process.env.REACT_APP_ENDPOINT,
@@ -24,13 +27,25 @@ const client = new ApolloClient({
 });
 
 function App() {
+  const { i18n } = useTranslation();
+  const theme = createMuiTheme(
+    {
+      palette: {
+        primary: { main: "#1976d2" },
+      },
+    },
+    i18n.language == "ru" ? ruRU : enUS
+  );
+
   return (
     <div className="App">
       <ApolloProvider client={client as any}>
         <ApolloHooksProvider client={client}>
           <UserContextProvider>
             <GamesContextProvider>
-              <AppRoutes />
+              <ThemeProvider theme={theme}>
+                <AppRoutes />
+              </ThemeProvider>
             </GamesContextProvider>
           </UserContextProvider>
         </ApolloHooksProvider>
@@ -40,3 +55,15 @@ function App() {
 }
 
 export default App;
+
+// ADMIN CREDENTIALS
+// {
+//   "credentials": {
+//     "login": "+76662223344",
+//     "password": "22222222"
+//   }
+// }
+
+// GENRI - MANAGER
+// "login": "+79284609803",
+// "password": "123qweasd"

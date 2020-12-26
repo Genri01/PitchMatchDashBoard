@@ -78,7 +78,7 @@ export const GameCard: FC<IProps> = ({ data }: IProps) => {
                     {data?.address || "-"}
                   </Typography>
 
-                  <div>
+                  <Box display="flex">
                     <Tooltip title={t("action.cancel") as string}>
                       <IconButton
                         aria-label="edit"
@@ -97,7 +97,7 @@ export const GameCard: FC<IProps> = ({ data }: IProps) => {
                         <CheckIcon />
                       </IconButton>
                     </Tooltip>
-                  </div>
+                  </Box>
                 </Box>
               </React.Fragment>
             }

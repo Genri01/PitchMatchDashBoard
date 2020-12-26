@@ -12,7 +12,6 @@ export const useStyles = makeStyles((theme: Theme) =>
     filtersWrapper: {
       display: "flex",
       flexDirection: "column",
-      width: "20%",
       padding: "20px",
     },
     filtersTitle: {

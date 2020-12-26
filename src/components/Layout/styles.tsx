@@ -8,15 +8,25 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
     },
     appBar: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
+      [theme.breakpoints.up("sm")]: {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: drawerWidth,
+      },
     },
     drawer: {
-      width: drawerWidth,
-      flexShrink: 0,
+      [theme.breakpoints.up("sm")]: {
+        width: drawerWidth,
+        flexShrink: 0,
+      },
     },
     drawerPaper: {
       width: drawerWidth,
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up("sm")]: {
+        display: "none",
+      },
     },
     logoTitle: {
       height: "64px",

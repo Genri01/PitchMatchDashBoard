@@ -7,8 +7,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    width: 635,
+    maxWidth: 635,
     margin: "auto",
+    marginBottom: 50,
   },
   avatar: {
     margin: theme.spacing(1),
@@ -23,16 +24,13 @@ export const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
   },
   fullwidthField: {
-    margin: theme.spacing(1),
-    width: 617,
+    width: "100%",
   },
   field: {
-    margin: theme.spacing(1),
-    width: 300,
+    width: "100%",
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
-    width: 620,
+    width: "100%",
   },
   mapWrapper: {
     width: "100%",

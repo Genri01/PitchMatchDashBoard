@@ -1,4 +1,4 @@
-import React, { useState, useCallback, FC } from "react";
+import React, { useState, useCallback, FC, useEffect } from "react";
 import Cropper from "react-easy-crop";
 import Slider from "@material-ui/core/Slider";
 import Button from "@material-ui/core/Button";
@@ -50,10 +50,10 @@ const dataURLtoFile = (dataurl, filename) => {
 
 interface IProps {
   onChange: (v: any) => void;
-  defaultImages?: File[];
+  existingFiles?: File[];
 }
 
-export const ImageUploader: FC<IProps> = ({ onChange }) => {
+export const ImageUploader: FC<IProps> = ({ onChange, existingFiles }) => {
   const classes = useStyles();
   const { t } = useTranslation();
 
@@ -93,29 +93,39 @@ export const ImageUploader: FC<IProps> = ({ onChange }) => {
     }
   }, [imageSrcs, croppedAreaPixels, rotation]);
 
+  const addFiles = async (files: File[]) => {
+    const allFilesArr = [...rawImages, ...files];
+    setRawImages(allFilesArr as any);
+    onChange(allFilesArr);
+
+    const imageDataUrls: any[] = [];
+    for (let f of files) {
+      let imageDataUrl = await readFile(f);
+
+      const orientation = await getOrientation(f);
+      const rotation = ORIENTATION_TO_ANGLE[orientation];
+      if (rotation) {
+        imageDataUrl = await getRotatedImage(imageDataUrl, rotation);
+      }
+      imageDataUrls.push(imageDataUrl);
+    }
+    setImageSrcs([...imageSrcs, ...imageDataUrls] as any);
+  };
+
   const onFileChange = async (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const files = e.target.files;
       const newFilesArr = Array.from(files) as File[];
-      const allFilesArr = [...rawImages, ...newFilesArr];
 
-      setRawImages(allFilesArr as any);
-      onChange(allFilesArr);
-
-      const imageDataUrls: any[] = [];
-      for (let f of newFilesArr) {
-        let imageDataUrl = await readFile(f);
-
-        const orientation = await getOrientation(f);
-        const rotation = ORIENTATION_TO_ANGLE[orientation];
-        if (rotation) {
-          imageDataUrl = await getRotatedImage(imageDataUrl, rotation);
-        }
-        imageDataUrls.push(imageDataUrl);
-      }
-      setImageSrcs([...imageSrcs, ...imageDataUrls] as any);
+      await addFiles(newFilesArr);
     }
   };
+
+  useEffect(() => {
+    if (existingFiles?.length) {
+      addFiles(existingFiles);
+    }
+  }, [existingFiles]);
 
   return (
     <div className={classes.wrapper}>

@@ -14,6 +14,7 @@ import {
   GamePage,
   CreateGamePage,
   CalendarPage,
+  AccessPage,
 } from "./pages";
 import { UserPage } from "./pages/user/UserPage";
 
@@ -39,8 +40,9 @@ export const AppRoutes = () => {
             <Route path={Routes.GAMES} component={GamesPage} />
             <Route path={Routes.CREATE_GAME} component={CreateGamePage} />
             <Route path={Routes.GAME} component={GamePage} />
-
             <Route path={Routes.GAMES_CALENDAR} component={CalendarPage} />
+
+            <Route path={Routes.ACCESS} component={AccessPage} />
             <Route render={() => <Redirect to={Routes.FIELDS} />} />
           </Switch>
         </Layout>

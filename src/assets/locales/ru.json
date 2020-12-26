@@ -18,7 +18,7 @@
             "name": "Наименование поля",
             "description": "Описание",
             "address": "Адрес",
-            "indoor": "В помещении",
+            "indoor": "Крытое",
             "price": "Цена на человека",
             "phoneNumber": "Телефон",
             "email": "Email",
@@ -35,17 +35,20 @@
             "birthday": "Дата рождения",
             "gender": "Пол",
             "phoneNumber": "Телефон",
-            "email": "Email",
-            "picture": "“Фото”",
-            "prefferedPosition": "prefferedPosition",   
-            "bannedAt": "bannedAt",
-            "banReason": "banReason",
-            "ratingScore": "ratingScore",
-            "ratingTotal": "ratingTotal",
-            "attendyScore": "attendyScore",
-            "attendyTotal": "attendyTotal",
-            "checkinRating": "checkinRating",
-            "commercialFrom": "commercialFrom"
+            "role": "Роль",
+            "email": "Адрес электронной почты",
+            "picture": "Изображение",
+            "prefferedPosition": "Позиция на поле",   
+            "bannedAt": "Дата блокировки",
+            "banReason": "Причина блокировки",
+            "ratingScore": "Оценка рейтинга",
+            "ratingTotal": "Рейтинг",
+            "attendyScore": "Оценка посещаемости",
+            "attendyTotal": "Посещаемость",
+            "checkinRating": "Проверка рейтинга",
+            "commercialFrom": "Дата создания коммерческого аккаунта",
+            "maleShort": "муж",
+            "femaleShort": "жен"
         }
     },
     "form": {
@@ -61,7 +64,7 @@
             "openFrom": "Работает от",
             "openTo": "Работает до",
             "size": "Размер",
-            "indoor": "в помещении",
+            "indoor": "Крытое",
             "latitude": "Широта",
             "longitude": "Долгота"
         },
@@ -112,7 +115,14 @@
         "confirm": "Подтвердить",
         "cancel": "Отклонить",
         "downloadExcel": "Скачать в Excel",
-        "goTo": "Перейти"
+        "goTo": "Перейти",
+        "details": "Подробнее",
+        "print": "Печать",
+        "role": {
+            "makeModerator": "Сделать модератором",
+            "makeManager": "Сделать менеджером",
+            "makeUser": "Сделать пользователем"
+        }
     },
     "error": {
         "required": "Обязательное поле",
@@ -126,10 +136,11 @@
     "tab": {
         "gamesBookings": "Игры/Бронирования",
         "users": "Пользователи",
-        "fields": "Поля"
+        "fields": "Поля",
+        "settings": "Настройки"
     },
     "page": {
-        "allFields": "Все поля",
+        "fields": "Поля",
         "field": "Cтраница поля",
         "createField": "Создать поле",
 
@@ -139,6 +150,18 @@
         "allGames": "Все игры",
         "game": "Cтраница игры",
         "createGame": "Создать игру",
-        "calendar": "Календарь"
+        "calendar": "Календарь",
+
+        "accesses": "Доступы"
+    },
+    "shared": {
+        "yes": "Да",
+        "no": "Нет",
+        "role": {
+            "admin": "Админ",
+            "moderator": "Модератор",
+            "manager": "Менеджер",
+            "user": "Пользователь"
+        }
     }
 }

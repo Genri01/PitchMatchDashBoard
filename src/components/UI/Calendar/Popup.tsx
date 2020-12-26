@@ -5,9 +5,12 @@ import {
   CardActions,
   Button,
 } from "@material-ui/core";
+import i18next from "i18next";
 import React, { FC } from "react";
+
 import { Link } from "react-router-dom";
 import Popup from "reactjs-popup";
+
 import { Game } from "../../../generated/apolloComponents";
 
 export const CalendarEventPopup: FC = (eventInfo: any) => {
@@ -34,10 +37,10 @@ export const CalendarEventPopup: FC = (eventInfo: any) => {
               {game?.address || "Игра"}
             </Typography>
             <Typography color="textSecondary" style={{}}>
-              Количество игроков: {game?.totalMembers}
+              {i18next.t("game.fields.size")}: {game?.totalMembers}
             </Typography>
             <Typography color="textSecondary" style={{}}>
-              Цена: {game?.price || "-"}
+              {i18next.t("game.fields.price")}: {game?.price || "-"}
             </Typography>
 
             <Typography
@@ -62,7 +65,7 @@ export const CalendarEventPopup: FC = (eventInfo: any) => {
               }}
             >
               <Button size="small" disableRipple color="primary">
-                Детальнее
+                {i18next.t("action.details")}
               </Button>
             </Link>
           </CardActions>

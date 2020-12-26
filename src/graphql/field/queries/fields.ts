@@ -10,6 +10,8 @@ export const FieldsQuery = gql`
         address
         roof
         price
+        fromTime
+        toTime
         point {
           id
           location

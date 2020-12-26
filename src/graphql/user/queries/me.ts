@@ -4,8 +4,9 @@ export const meQuery = gql`
   fragment User on User {
     __typename
     id
+    role
     userName
-    commercialFrom
+    commercialFrom 
   }
 
   query Me {

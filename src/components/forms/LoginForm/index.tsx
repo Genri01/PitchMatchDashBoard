@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Avatar from "@material-ui/core/Avatar";
@@ -7,17 +7,28 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
+import MuiAlert from "@material-ui/lab/Alert";
 
 import { useStyles } from "./styles";
 import { ViewerCredentialsInput } from "../../../generated/apolloComponents";
 import { UserContext } from "../../../contexts";
 import { useTranslation } from "react-i18next";
+import { Snackbar } from "@material-ui/core";
 
 export const LoginForm = () => {
   const classes = useStyles();
   const { t } = useTranslation();
   const { handleSubmit, register } = useForm();
   const { login } = useContext(UserContext);
+  const [serverError, setServerError] = useState<any>();
+
+  const onSubmit = async (data: ViewerCredentialsInput) => {
+    try {
+      await login(data);
+    } catch (error) {
+      setServerError(error.message);
+    }
+  };
 
   return (
     <div className={classes.paper}>
@@ -31,7 +42,7 @@ export const LoginForm = () => {
         className={classes.form}
         noValidate
         // @ts-ignore
-        onSubmit={handleSubmit<ViewerCredentialsInput>(login)}
+        onSubmit={handleSubmit<ViewerCredentialsInput>(onSubmit)}
       >
         <TextField
           variant="outlined"
@@ -70,6 +81,19 @@ export const LoginForm = () => {
           {t("form.login.submit")}
         </Button>
       </form>
+      <Snackbar
+        style={{
+          maxWidth: 400,
+        }}
+        open={!!serverError}
+        autoHideDuration={6000}
+        onClose={() => setServerError(null)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <MuiAlert elevation={6} variant="standard" severity="error">
+          {serverError}
+        </MuiAlert>
+      </Snackbar>
     </div>
   );
 };

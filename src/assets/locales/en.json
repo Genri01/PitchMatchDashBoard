@@ -18,7 +18,7 @@
             "name": "Name",
             "description": "Description",
             "address": "Address",
-            "indoor": "Indoor",
+            "indoor": "Cover",
             "price": "Price per person",
             "phoneNumber": "Phone number",
             "email": "Email",
@@ -35,17 +35,20 @@
             "birthday": "Date of Birth",
             "gender": "Gender",
             "phoneNumber": "Phone number",
+            "role": "Role",
             "email": "Email",
-            "picture": "Photo",
-            "prefferedPosition": "prefferedPosition",   
-            "bannedAt": "bannedAt",
-            "banReason": "banReason",
-            "ratingScore": "ratingScore",
-            "ratingTotal": "ratingTotal",
-            "attendyScore": "attendyScore",
-            "attendyTotal": "attendyTotal",
-            "checkinRating": "checkinRating",
-            "commercialFrom": "commercialFrom"
+            "picture": "Image",
+            "prefferedPosition": "Preffered position",   
+            "bannedAt": "Banned at",
+            "banReason": "Ban reason",
+            "ratingScore": "Rating score",
+            "ratingTotal": "Rating total",
+            "attendyScore": "Attendy score",
+            "attendyTotal": "Attendy total",
+            "checkinRating": "Checkin rating",
+            "commercialFrom": "Commercial from",
+            "maleShort": "male",
+            "femaleShort": "female"
         }
     },
     
@@ -62,7 +65,8 @@
             "openFrom": "Open from",
             "openTo": "Open to",
             "size": "Size",
-            "indoor": "Indoor",
+            "indoor": "Cover",
+
             "latitude": "Latitude",
             "longitude": "Longitude"
         },
@@ -113,7 +117,14 @@
         "confirm": "Confirm",
         "cancel": "Cancel",
         "downloadExcel": "Download in Excel",
-        "goTo": "Open"
+        "goTo": "Open",
+        "details": "More",
+        "print": "Print",
+        "role": {
+            "makeModerator": "Make moderator",
+            "makeManager": "Make manager",
+            "makeUser": "Make user"
+        }
     },
     "error": {
         "required": "Field is required",
@@ -127,10 +138,11 @@
     "tab": {
         "gamesBookings": "Games/Bookings",
         "users": "Users",
-        "fields": "Fields"
+        "fields": "Fields",
+        "settings": "Settings"
     },
     "page": {
-        "allFields": "All fields",
+        "fields": "Fields",
         "field": "Field",
         "createField": "Create field",
 
@@ -140,7 +152,18 @@
         "allGames": "All games",
         "game": "Game",
         "createGame": "Create game",
-        "calendar": "Calendar"
+        "calendar": "Calendar",
+
+        "accesses": "Accesses"
+    },
+    "shared": {
+        "yes": "Yes",
+        "no": "No",
+        "role": {
+            "admin": "Admin",
+            "moderator": "Moderator",
+            "manager": "Manager",
+            "user": "User"
+        }
     }
-    
 }

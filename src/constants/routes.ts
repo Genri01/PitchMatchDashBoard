@@ -14,4 +14,6 @@ export enum Routes {
   CREATE_GAME = "/game/create",
 
   GAMES_CALENDAR = "/calendar/:year?/:month?",
+
+  ACCESS = "/access/:pageNum?/:rowsPerPage?",
 }

@@ -14,6 +14,7 @@ export const usersStatsQuery = gql`
           gender
           email
           phone
+          role
           avatar {
             url
           }

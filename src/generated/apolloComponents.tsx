@@ -83,6 +83,7 @@ export type QueryGetUserStatsArgs = {
 
 
 export type QueryGetUsersStatsArgs = {
+  filter?: Maybe<UserStatsFilter>;
   pagination?: Maybe<Pagination>;
 };
 
@@ -431,6 +432,10 @@ export type UserStats = {
   user?: Maybe<UserProfile>;
 };
 
+export type UserStatsFilter = {
+  role?: Maybe<Scalars['String']>;
+};
+
 export type UserStatsList = {
   __typename?: 'UserStatsList';
   count: Scalars['Int'];
@@ -536,6 +541,7 @@ export type GeoPoint = {
 export type PlaceFilter = {
   search?: Maybe<Scalars['String']>;
   commercial?: Maybe<Scalars['Boolean']>;
+  userId?: Maybe<Scalars['ID']>;
 };
 
 export type PlaceList = {
@@ -599,6 +605,7 @@ export type Mutation = {
   checkConfirmationCode?: Maybe<Scalars['String']>;
   resetPassword?: Maybe<ConfirmationCodeType>;
   updateUser: User;
+  updateUserRole: User;
   upsertRelation: UserProfile;
   updateUserBan: UserProfile;
   setUserCommercial: UserProfile;
@@ -666,6 +673,12 @@ export type MutationResetPasswordArgs = {
 export type MutationUpdateUserArgs = {
   id: Scalars['ID'];
   input: UserInput;
+};
+
+
+export type MutationUpdateUserRoleArgs = {
+  userId: Scalars['ID'];
+  role: Scalars['String'];
 };
 
 
@@ -843,7 +856,6 @@ export enum ConfirmationCodeType {
 }
 
 export type UserInput = {
-  role?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
@@ -1097,7 +1109,7 @@ export type FieldsQuery = (
     { __typename?: 'PlaceList' }
     & { rows?: Maybe<Array<Maybe<(
       { __typename?: 'Place' }
-      & Pick<Place, 'id' | 'name' | 'description' | 'address' | 'roof' | 'price'>
+      & Pick<Place, 'id' | 'name' | 'description' | 'address' | 'roof' | 'price' | 'fromTime' | 'toTime'>
       & { point?: Maybe<(
         { __typename?: 'ShortGeoPoint' }
         & Pick<ShortGeoPoint, 'id' | 'location'>
@@ -1106,7 +1118,10 @@ export type FieldsQuery = (
   )> }
 );
 
-export type MapFieldsQueryVariables = Exact<{ [key: string]: never; }>;
+export type MapFieldsQueryVariables = Exact<{
+  filter?: PlaceFilter;
+  pagination?: Maybe<Pagination>;
+}>;
 
 
 export type MapFieldsQuery = (
@@ -1205,9 +1220,37 @@ export type LogoutMutation = (
   ) }
 );
 
+export type UpdateUserMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: UserInput;
+}>;
+
+
+export type UpdateUserMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUser: (
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+  ) }
+);
+
+export type UpdateUserRoleMutationVariables = Exact<{
+  userId: Scalars['ID'];
+  role: Scalars['String'];
+}>;
+
+
+export type UpdateUserRoleMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUserRole: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'lastName' | 'role'>
+  ) }
+);
+
 export type UserFragment = (
   { __typename: 'User' }
-  & Pick<User, 'id' | 'userName' | 'commercialFrom'>
+  & Pick<User, 'id' | 'role' | 'userName' | 'commercialFrom'>
 );
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
@@ -1254,7 +1297,7 @@ export type UsersStatsQuery = (
       & Pick<UserStats, 'userId' | 'attendGames' | 'orgGames'>
       & { user?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'firstName' | 'lastName' | 'birthday' | 'gender' | 'email' | 'phone'>
+        & Pick<UserProfile, 'firstName' | 'lastName' | 'birthday' | 'gender' | 'email' | 'phone' | 'role'>
         & { avatar?: Maybe<(
           { __typename?: 'File' }
           & Pick<File, 'url'>
@@ -1274,6 +1317,7 @@ export const UserFragmentDoc = gql`
     fragment User on User {
   __typename
   id
+  role
   userName
   commercialFrom
 }
@@ -1370,6 +1414,8 @@ export const FieldsDocument = gql`
       address
       roof
       price
+      fromTime
+      toTime
       point {
         id
         location
@@ -1406,8 +1452,8 @@ export type FieldsQueryHookResult = ReturnType<typeof useFieldsQuery>;
 export type FieldsLazyQueryHookResult = ReturnType<typeof useFieldsLazyQuery>;
 export type FieldsQueryResult = Apollo.QueryResult<FieldsQuery, FieldsQueryVariables>;
 export const MapFieldsDocument = gql`
-    query MapFields {
-  getPlaces(filter: {}) {
+    query MapFields($filter: PlaceFilter! = {}, $pagination: Pagination) {
+  getPlaces(filter: $filter, pagination: $pagination) {
     rows {
       id
       address
@@ -1433,6 +1479,8 @@ export const MapFieldsDocument = gql`
  * @example
  * const { data, loading, error } = useMapFieldsQuery({
  *   variables: {
+ *      filter: // value for 'filter'
+ *      pagination: // value for 'pagination'
  *   },
  * });
  */
@@ -1637,6 +1685,74 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($id: ID!, $input: UserInput!) {
+  updateUser(id: $id, input: $input) {
+    id
+  }
+}
+    `;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, baseOptions);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UpdateUserRoleDocument = gql`
+    mutation UpdateUserRole($userId: ID!, $role: String!) {
+  updateUserRole(userId: $userId, role: $role) {
+    id
+    lastName
+    role
+  }
+}
+    `;
+export type UpdateUserRoleMutationFn = Apollo.MutationFunction<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>;
+
+/**
+ * __useUpdateUserRoleMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserRoleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserRoleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserRoleMutation, { data, loading, error }] = useUpdateUserRoleMutation({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      role: // value for 'role'
+ *   },
+ * });
+ */
+export function useUpdateUserRoleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>) {
+        return Apollo.useMutation<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>(UpdateUserRoleDocument, baseOptions);
+      }
+export type UpdateUserRoleMutationHookResult = ReturnType<typeof useUpdateUserRoleMutation>;
+export type UpdateUserRoleMutationResult = Apollo.MutationResult<UpdateUserRoleMutation>;
+export type UpdateUserRoleMutationOptions = Apollo.BaseMutationOptions<UpdateUserRoleMutation, UpdateUserRoleMutationVariables>;
 export const MeDocument = gql`
     query Me {
   viewer {
@@ -1736,6 +1852,7 @@ export const UsersStatsDocument = gql`
         gender
         email
         phone
+        role
         avatar {
           url
         }

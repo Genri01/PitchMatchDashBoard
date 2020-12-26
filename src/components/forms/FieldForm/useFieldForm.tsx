@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { format } from "date-fns";
@@ -9,10 +9,12 @@ import {
   Place,
   PlaceInput,
   useUpsertFieldMutation,
+  // File as GqlFile,
 } from "../../../generated/apolloComponents";
 import { LatLng } from "../../UI/MarkerMap";
 
 import { FieldQuery } from "../../../graphql/field/queries/field";
+import { blobToFile } from "../../UI";
 
 export type FieldFormMode = "create" | "edit";
 
@@ -24,19 +26,16 @@ export interface UseFieldFormProps {
 export const useFieldForm = ({ existingData: ed }: UseFieldFormProps) => {
   const history = useHistory();
 
-  const { handleSubmit, register, watch, errors } = useForm<any>({
+  const { handleSubmit, register, watch, formState, errors } = useForm<any>({
     mode: "onChange",
     defaultValues: {
       ...ed,
-      fromTime: ed?.fromTime
-        ? format(new Date(ed.fromTime), "yyyy-MM-dd'T'hh:mm")
-        : "",
-      toTime: ed?.toTime
-        ? format(new Date(ed.toTime), "yyyy-MM-dd'T'hh:mm")
-        : "",
+      fromTime: ed?.fromTime ? format(new Date(ed.fromTime), "HH:mm") : "",
+      toTime: ed?.toTime ? format(new Date(ed.toTime), "HH:mm") : "",
     },
   });
   const [serverError, setServerError] = useState<any>();
+  const [existingImages, setExistingImages] = useState<File[]>();
 
   const { me } = useContext(UserContext);
   const [upsertField] = useUpsertFieldMutation();
@@ -60,6 +59,8 @@ export const useFieldForm = ({ existingData: ed }: UseFieldFormProps) => {
           data.price && typeof data.price == "string"
             ? parseFloat(data.price)
             : 0,
+        fromTime: new Date(`2020-12-11T${data.fromTime}`),
+        toTime: new Date(`2020-12-11T${data.toTime}`),
         userId: me!.id,
         location: [lat, lng],
         visitType: "public",
@@ -82,6 +83,27 @@ export const useFieldForm = ({ existingData: ed }: UseFieldFormProps) => {
     }
   };
 
+  const fetchExistingImages = async (urls: string[]) =>
+    await Promise.all(
+      urls.map((url) =>
+        fetch(url)
+          .then((res) => res.blob())
+          .then((blob) => blobToFile(blob, url))
+      )
+    );
+
+  const initiateExistingImages = async () => {
+    const imgs = await fetchExistingImages([
+      "https://upload.wikimedia.org/wikipedia/commons/7/77/Delete_key1.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/7/77/Delete_key1.jpg",
+    ]);
+    setExistingImages(imgs);
+  };
+
+  useEffect(() => {
+    initiateExistingImages();
+  }, []);
+
   return {
     register,
     onSubmit: handleSubmit<PlaceInput>(onSubmit),
@@ -92,5 +114,7 @@ export const useFieldForm = ({ existingData: ed }: UseFieldFormProps) => {
     serverError,
     setServerError,
     errors,
+    formState,
+    existingFiles: existingImages,
   };
 };

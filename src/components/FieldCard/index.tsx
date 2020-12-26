@@ -123,7 +123,7 @@ export const FieldCard: FC<IProps> = ({ data }: IProps) => {
 
         <FieldListItem
           name={t("field.fields.indoor")}
-          value={data?.roof ? "Да" : "Нет"}
+          value={data?.roof ? t("shared.yes") : t("shared.no")}
           divider={true}
         />
         <FieldListItem
