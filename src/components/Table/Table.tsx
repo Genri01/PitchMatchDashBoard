@@ -12,8 +12,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import { useReactToPrint } from "react-to-print";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import PrintIcon from "@material-ui/icons/Print";
-// import DateRangePicker from "@material-ui/lab/DateRangePicker";
-// import DateRangeDelimiter from "@material-ui/lab/DateRangeDelimiter";
 
 import ReactExport from "react-export-excel";
 
@@ -201,7 +199,15 @@ export function Table<T>({
               <TableRow hover tabIndex={-1}>
                 {headCells.map((hc) =>
                   hc.filter && hc.valueGetter ? (
-                    <TableCell>
+                    <TableCell
+                      style={
+                        hc.minWidth
+                          ? {
+                              minWidth: hc.minWidth,
+                            }
+                          : {}
+                      }
+                    >
                       {hc.filter?.type == "select" && (
                         <MuiSelect
                           noneOption
@@ -219,29 +225,18 @@ export function Table<T>({
                           }
                         />
                       )}
-                      {/* {hc.filter?.type == "dateRange" && (
-                        <DateRangePicker
-                          startText="Start"
-                          endText="End"
-                          // value={value}
-                          // onChange={(newValue) => {
-                        //   setValue(newValue);
-                          // }}
-                          renderInput={(startProps, endProps) => (
-                            <React.Fragment>
-                              <TextField {...startProps} variant="standard" />
-                              <DateRangeDelimiter> to </DateRangeDelimiter>
-                              <TextField {...endProps} variant="standard" />
-                            </React.Fragment>
-                          )}
-                        />
-                      )} */}
-                      {["search", "numberRange"].includes(hc.filter?.type) && (
+                      {[
+                        "search",
+                        "numberRange",
+                        "dateRange",
+                        "timeHMrange",
+                      ].includes(hc.filter?.type) && (
                         <Search
                           value={searchItems?.[hc.id]}
                           onChange={(v) =>
                             setSearchItems({ ...searchItems, [hc.id]: v })
                           }
+                          helperText={hc.filter.tip}
                           slight={true}
                         />
                       )}
@@ -268,9 +263,15 @@ export function Table<T>({
                       {headCells
                         .filter((hc) => !hc.primaryKey)
                         .map((hc) => {
+                          const cellStyle = hc.minWidth
+                            ? {
+                                minWidth: hc.minWidth,
+                              }
+                            : {};
+
                           if (hc.isItemLink && hc.linkFormatter) {
                             return (
-                              <TableCell>
+                              <TableCell style={cellStyle}>
                                 <Link to={hc.linkFormatter(row)}>
                                   {extractValue(hc, row)}
                                 </Link>
@@ -280,7 +281,7 @@ export function Table<T>({
 
                           if (hc.BadgeComponent && hc.badgePropsExtractor) {
                             return (
-                              <TableCell>
+                              <TableCell style={cellStyle}>
                                 <hc.BadgeComponent
                                   {...hc.badgePropsExtractor(row)}
                                 />
@@ -291,7 +292,7 @@ export function Table<T>({
                           if (hc.isImage) {
                             const imgSrc = extractValue(hc, row);
                             return imgSrc ? (
-                              <TableCell>
+                              <TableCell style={cellStyle}>
                                 <img
                                   src={imgSrc}
                                   className={classes.profilePic}

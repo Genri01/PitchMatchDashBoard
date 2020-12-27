@@ -14,8 +14,8 @@ export const useMenuItems = () => {
       path: "/fields",
       displayInMenu: true,
     },
-    { name: t("page.field"), path: "/field", displayInMenu: false },
     { name: t("page.createField"), path: "/field/create", displayInMenu: true },
+    { name: t("page.field"), path: "/field", displayInMenu: false },
   ];
 
   const USER_ITEMS: MenuItem[] = [
@@ -25,8 +25,8 @@ export const useMenuItems = () => {
 
   const GAME_ITEMS: MenuItem[] = [
     { name: t("page.allGames"), path: "/games", displayInMenu: true },
-    { name: t("page.game"), path: "/game", displayInMenu: false },
     { name: t("page.createGame"), path: "/game/create", displayInMenu: true },
+    { name: t("page.game"), path: "/game", displayInMenu: false },
     { name: t("page.calendar"), path: "/calendar", displayInMenu: false },
   ];
 

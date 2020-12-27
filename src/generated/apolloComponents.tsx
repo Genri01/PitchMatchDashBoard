@@ -433,7 +433,7 @@ export type UserStats = {
 };
 
 export type UserStatsFilter = {
-  role?: Maybe<Scalars['String']>;
+  role?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type UserStatsList = {
@@ -561,6 +561,7 @@ export type GameFilter = {
   endDate?: Maybe<Scalars['Date']>;
   search?: Maybe<Scalars['String']>;
   placeId?: Maybe<Scalars['ID']>;
+  userId?: Maybe<Scalars['ID']>;
 };
 
 export type GameList = {
@@ -605,7 +606,7 @@ export type Mutation = {
   checkConfirmationCode?: Maybe<Scalars['String']>;
   resetPassword?: Maybe<ConfirmationCodeType>;
   updateUser: User;
-  updateUserRole: User;
+  updateUserRole: UserProfile;
   upsertRelation: UserProfile;
   updateUserBan: UserProfile;
   setUserCommercial: UserProfile;
@@ -1234,6 +1235,20 @@ export type UpdateUserMutation = (
   ) }
 );
 
+export type UpdateUserBanMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input?: Maybe<UserBanInput>;
+}>;
+
+
+export type UpdateUserBanMutation = (
+  { __typename?: 'Mutation' }
+  & { updateUserBan: (
+    { __typename?: 'UserProfile' }
+    & Pick<UserProfile, 'id' | 'bannedAt' | 'banReason'>
+  ) }
+);
+
 export type UpdateUserRoleMutationVariables = Exact<{
   userId: Scalars['ID'];
   role: Scalars['String'];
@@ -1243,8 +1258,8 @@ export type UpdateUserRoleMutationVariables = Exact<{
 export type UpdateUserRoleMutation = (
   { __typename?: 'Mutation' }
   & { updateUserRole: (
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'lastName' | 'role'>
+    { __typename?: 'UserProfile' }
+    & Pick<UserProfile, 'id' | 'lastName' | 'role'>
   ) }
 );
 
@@ -1276,7 +1291,7 @@ export type UserStatsQuery = (
     & Pick<UserStats, 'userId' | 'attendGames' | 'orgGames'>
     & { user?: Maybe<(
       { __typename?: 'UserProfile' }
-      & Pick<UserProfile, 'firstName' | 'lastName' | 'birthday' | 'gender' | 'prefferedPosition' | 'bannedAt' | 'banReason' | 'ratingScore' | 'ratingTotal' | 'attendyScore' | 'attendyTotal' | 'checkinRating' | 'commercialFrom'>
+      & Pick<UserProfile, 'id' | 'firstName' | 'lastName' | 'role' | 'birthday' | 'gender' | 'prefferedPosition' | 'bannedAt' | 'banReason' | 'ratingScore' | 'ratingTotal' | 'attendyScore' | 'attendyTotal' | 'checkinRating' | 'commercialFrom'>
       & { avatar?: Maybe<(
         { __typename?: 'File' }
         & Pick<File, 'url'>
@@ -1285,7 +1300,9 @@ export type UserStatsQuery = (
   ) }
 );
 
-export type UsersStatsQueryVariables = Exact<{ [key: string]: never; }>;
+export type UsersStatsQueryVariables = Exact<{
+  filter?: Maybe<UserStatsFilter>;
+}>;
 
 
 export type UsersStatsQuery = (
@@ -1297,7 +1314,7 @@ export type UsersStatsQuery = (
       & Pick<UserStats, 'userId' | 'attendGames' | 'orgGames'>
       & { user?: Maybe<(
         { __typename?: 'UserProfile' }
-        & Pick<UserProfile, 'firstName' | 'lastName' | 'birthday' | 'gender' | 'email' | 'phone' | 'role'>
+        & Pick<UserProfile, 'id' | 'firstName' | 'lastName' | 'birthday' | 'gender' | 'email' | 'phone' | 'role'>
         & { avatar?: Maybe<(
           { __typename?: 'File' }
           & Pick<File, 'url'>
@@ -1718,6 +1735,41 @@ export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UpdateUserBanDocument = gql`
+    mutation UpdateUserBan($id: ID!, $input: UserBanInput) {
+  updateUserBan(id: $id, input: $input) {
+    id
+    bannedAt
+    banReason
+  }
+}
+    `;
+export type UpdateUserBanMutationFn = Apollo.MutationFunction<UpdateUserBanMutation, UpdateUserBanMutationVariables>;
+
+/**
+ * __useUpdateUserBanMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserBanMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserBanMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserBanMutation, { data, loading, error }] = useUpdateUserBanMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateUserBanMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserBanMutation, UpdateUserBanMutationVariables>) {
+        return Apollo.useMutation<UpdateUserBanMutation, UpdateUserBanMutationVariables>(UpdateUserBanDocument, baseOptions);
+      }
+export type UpdateUserBanMutationHookResult = ReturnType<typeof useUpdateUserBanMutation>;
+export type UpdateUserBanMutationResult = Apollo.MutationResult<UpdateUserBanMutation>;
+export type UpdateUserBanMutationOptions = Apollo.BaseMutationOptions<UpdateUserBanMutation, UpdateUserBanMutationVariables>;
 export const UpdateUserRoleDocument = gql`
     mutation UpdateUserRole($userId: ID!, $role: String!) {
   updateUserRole(userId: $userId, role: $role) {
@@ -1792,8 +1844,10 @@ export const UserStatsDocument = gql`
     attendGames
     orgGames
     user {
+      id
       firstName
       lastName
+      role
       avatar {
         url
       }
@@ -1839,13 +1893,14 @@ export type UserStatsQueryHookResult = ReturnType<typeof useUserStatsQuery>;
 export type UserStatsLazyQueryHookResult = ReturnType<typeof useUserStatsLazyQuery>;
 export type UserStatsQueryResult = Apollo.QueryResult<UserStatsQuery, UserStatsQueryVariables>;
 export const UsersStatsDocument = gql`
-    query UsersStats {
-  getUsersStats {
+    query UsersStats($filter: UserStatsFilter) {
+  getUsersStats(filter: $filter) {
     rows {
       userId
       attendGames
       orgGames
       user {
+        id
         firstName
         lastName
         birthday
@@ -1874,6 +1929,7 @@ export const UsersStatsDocument = gql`
  * @example
  * const { data, loading, error } = useUsersStatsQuery({
  *   variables: {
+ *      filter: // value for 'filter'
  *   },
  * });
  */

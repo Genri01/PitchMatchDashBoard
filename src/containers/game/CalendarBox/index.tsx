@@ -10,12 +10,13 @@ import {
 } from "../../../components/forms";
 import { Game, useGamesQuery } from "../../../generated/apolloComponents";
 import { UserContext } from "../../../contexts";
+import { ROLES } from "../../../utils";
 
 export const CalendarBox = () => {
   const classes = useStyles();
   const history = useHistory();
   const { date } = useCalendarLocationParams();
-  const {} = useContext(UserContext);
+  const { me } = useContext(UserContext);
 
   const [statuses, setStatuses] = useState<string[]>([]);
   const [games, setGames] = useState<Game[]>([]);
@@ -24,6 +25,7 @@ export const CalendarBox = () => {
       filter: {
         startDate: new Date().toString(),
         ...(statuses.length ? { status: statuses } : {}),
+        ...(ROLES.isManager(me) ? { userId: me?.id } : {}),
       },
     },
     errorPolicy: "ignore",

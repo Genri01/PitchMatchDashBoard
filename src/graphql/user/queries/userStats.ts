@@ -7,8 +7,10 @@ export const userStatsQuery = gql`
       attendGames
       orgGames
       user {
+        id
         firstName
         lastName
+        role
         avatar {
           url
         }

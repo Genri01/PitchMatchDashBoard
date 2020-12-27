@@ -1,10 +1,14 @@
 import { format } from "date-fns";
+import ruloc from "date-fns/locale/ru";
+
 import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Table } from "../../components";
 import { useTableLocationParams } from "../../components/Table/useTableLocationParams";
 import { GamesContext } from "../../contexts";
 import { TableGame, useGamesListBox } from "./useGamesListBox";
+
+console.log("ruloc :>> ", ruloc);
 
 export const GamesListBox = () => {
   const { pageNum, rowsPerPage } = useTableLocationParams();

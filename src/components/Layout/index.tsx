@@ -173,7 +173,6 @@ export const Layout: FC = ({ children }) => {
         </Hidden>
         <Hidden xsDown implementation="css">
           <Drawer
-            // className={classes.drawer}
             variant="permanent"
             classes={{
               paper: classes.drawerPaper,

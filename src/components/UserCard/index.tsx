@@ -1,14 +1,19 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
-import { Box, Paper } from "@material-ui/core";
+import { Box, IconButton, Paper, Tooltip } from "@material-ui/core";
+import BlockIcon from "@material-ui/icons/Block";
+import RestoreIcon from "@material-ui/icons/RestorePage";
 
-import { UserStats } from "../../generated/apolloComponents";
+import { User, UserStats } from "../../generated/apolloComponents";
 import { useStyles } from "./style";
 import { useTranslation } from "react-i18next";
+import { useUserCard } from "./useUserCard";
+import { ROLES } from "../../utils";
+import { UserContext } from "../../contexts";
 
 interface ListItemProps {
   name: string;
@@ -53,6 +58,8 @@ export const UserCard: FC<IProps> = ({ data }: IProps) => {
 
   const imgUrl = data.user?.avatar?.url;
   const { user } = data;
+  const { me } = useContext(UserContext);
+  const { toggleBan } = useUserCard();
 
   return (
     <Paper variant="outlined" className={classes.wrapper}>
@@ -79,6 +86,29 @@ export const UserCard: FC<IProps> = ({ data }: IProps) => {
                       ? `${user?.lastName || ""} ${user?.firstName || ""}`
                       : "-"}
                   </Typography>
+                  {user &&
+                    ROLES.shouldBeDisplayed.accesses.banUser(
+                      user as User,
+                      me
+                    ) && (
+                      <Box display="flex">
+                        <Tooltip
+                          title={
+                            (user.bannedAt
+                              ? t("action.unban")
+                              : t("action.ban")) as string
+                          }
+                        >
+                          <IconButton
+                            aria-label="edit"
+                            color="secondary"
+                            onClick={() => toggleBan(user as User)}
+                          >
+                            {user.bannedAt ? <RestoreIcon /> : <BlockIcon />}
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
+                    )}
                 </Box>
               </React.Fragment>
             }

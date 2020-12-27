@@ -53,6 +53,9 @@
     },
     
     "form": {
+        "addAccessUser": {
+            "title": "Add user"
+        },
         "fieldForm": {
             "createTitle": "Create Field",
             "editTitle": "Edit Field",
@@ -116,10 +119,14 @@
         "search": "Search",
         "confirm": "Confirm",
         "cancel": "Cancel",
+        "ban": "Ban",
+        "unban": "Unban",
         "downloadExcel": "Download in Excel",
         "goTo": "Open",
         "details": "More",
         "print": "Print",
+        "add": "Add",
+        "addUser": "Add user",
         "role": {
             "makeModerator": "Make moderator",
             "makeManager": "Make manager",
@@ -161,7 +168,7 @@
         "no": "No",
         "role": {
             "admin": "Admin",
-            "moderator": "Moderator",
+            "support": "Moderator",
             "manager": "Manager",
             "user": "User"
         }

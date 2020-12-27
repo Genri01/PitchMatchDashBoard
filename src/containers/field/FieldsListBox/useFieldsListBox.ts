@@ -80,8 +80,10 @@ export const useFieldsListBox = () => {
             )}`
           : "",
       filter: {
-        type: "numberRange",
+        type: "timeHMrange",
+        tip: "hh:mm-hh:mm",
       },
+      minWidth: 180,
       label: t("field.fields.workingHours"),
     },
     {

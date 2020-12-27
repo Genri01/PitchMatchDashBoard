@@ -70,8 +70,9 @@ export const useGamesListBox = () => {
       id: "startDate",
       exportable: true,
       label: t("game.fields.dateAndTime"),
-      filter: { type: "dateRange" },
+      filter: { type: "dateRange", tip: "yyyy/mm/dd-yyyy/mm/dd " },
       valueGetter: (el: TableGame) => el.startDate || "",
+      minWidth: 200,
     },
   ];
 

@@ -59,9 +59,10 @@ export const useUsersListBox = () => {
     {
       id: "birthday",
       exportable: true,
-      filter: { type: "search" },
       valueGetter: (el: TableUser) => el?.birthday || "",
       label: t("user.fields.birthday"),
+      filter: { type: "dateRange", tip: "yyyy/mm/dd-yyyy/mm/dd " },
+      minWidth: 200,
     },
     {
       id: "email",

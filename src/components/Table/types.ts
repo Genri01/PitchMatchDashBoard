@@ -9,13 +9,18 @@ interface TableNumberRangeOptions {
 
 type TableSelectOptions = string[];
 
-export type TableFilterType = "search" | "select" | "numberRange" | "dateRange";
+export type TableFilterType =
+  | "search"
+  | "select"
+  | "numberRange"
+  | "dateRange"
+  | "timeHMrange";
 
 export interface TableColumnFilter {
   type: TableFilterType;
   options?: TableSelectOptions | TableNumberRangeOptions;
+  tip?: string;
 }
-
 export interface HeadCell<T> {
   disablePadding?: boolean;
   id: keyof T;
@@ -31,6 +36,7 @@ export interface HeadCell<T> {
   filter?: TableColumnFilter;
   withSeparateSearch?: boolean;
   valueGetter?: SearchFilterFunc;
+  minWidth?: number;
 }
 
 export interface ActionsOptions {

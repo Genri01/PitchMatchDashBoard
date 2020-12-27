@@ -140,7 +140,6 @@ export const FieldForm: FC<IProps> = ({
             <TextField
               label={t("form.fieldForm.openFrom")}
               id="datetime-local"
-              // type="datetime-local"
               type="time"
               variant="outlined"
               InputLabelProps={{
@@ -159,7 +158,6 @@ export const FieldForm: FC<IProps> = ({
             <TextField
               label={t("form.fieldForm.openTo")}
               id="datetime-local"
-              // type="datetime-local"
               type="time"
               variant="outlined"
               InputLabelProps={{
