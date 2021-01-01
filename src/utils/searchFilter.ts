@@ -41,8 +41,6 @@ export const filterItems = (
           } else if (filterType == "timeHMrange") {
             const val = propExtracter(el);
 
-            console.log("val", val);
-
             const inputRegexRes = REGEX.TIME_HM_RANGE.exec(searchTerm);
             const valRegexRes = REGEX.TIME_HM_RANGE.exec(val);
             if (!val) return false;
