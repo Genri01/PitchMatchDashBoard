@@ -34,6 +34,9 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 300,
       display: "flex",
       paddingLeft: "17px",
+      justifyContent: "center",
+      alignItems: "center",
+      paddingRight: "17px",
     },
     toolbar: theme.mixins.toolbar,
     toolbarContent: {

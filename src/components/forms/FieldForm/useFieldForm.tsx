@@ -66,9 +66,14 @@ export const useFieldForm = ({ existingData: ed }: UseFieldFormProps) => {
         visitType: "public",
       };
       if (images) input.filesToAdd = images;
+      if (ed?.files?.length) {
+        input.filesToRemove = ed.files
+          .filter((el) => !!el?.id)
+          .map((el) => el!.id);
+      }
 
       const res = await upsertField({
-        variables: { input, id: ed?.id },
+        variables: { input: { ...input }, id: ed?.id },
         refetchQueries: ed?.id
           ? [{ query: FieldQuery, variables: { id: ed.id } }]
           : [],
@@ -94,8 +99,7 @@ export const useFieldForm = ({ existingData: ed }: UseFieldFormProps) => {
 
   const initiateExistingImages = async () => {
     const imgs = await fetchExistingImages([
-      "https://upload.wikimedia.org/wikipedia/commons/7/77/Delete_key1.jpg",
-      "https://upload.wikimedia.org/wikipedia/commons/7/77/Delete_key1.jpg",
+      ...(ed?.files?.map((el) => el!.url) || []),
     ]);
     setExistingImages(imgs);
   };

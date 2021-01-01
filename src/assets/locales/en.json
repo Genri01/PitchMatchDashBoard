@@ -41,17 +41,18 @@
             "prefferedPosition": "Preffered position",   
             "bannedAt": "Banned at",
             "banReason": "Ban reason",
+            "bookings": "Bookings",
             "ratingScore": "Rating score",
             "ratingTotal": "Rating total",
             "attendyScore": "Attendy score",
             "attendyTotal": "Attendy total",
+            "actions": "Actions",
             "checkinRating": "Checkin rating",
             "commercialFrom": "Commercial from",
             "maleShort": "male",
             "femaleShort": "female"
         }
     },
-    
     "form": {
         "addAccessUser": {
             "title": "Add user"
@@ -128,14 +129,15 @@
         "add": "Add",
         "addUser": "Add user",
         "role": {
-            "makeModerator": "Make moderator",
-            "makeManager": "Make manager",
-            "makeUser": "Make user"
+            "makeModerator": "Assign moderator",
+            "makeManager": "Assign manager",
+            "makeUser": "Assign user"
         }
     },
     "error": {
         "required": "Field is required",
-        "email": "Please enter an email address"
+        "email": "Please enter an email address",
+        "wrongPasswordOrEmail": "Invalid email and/or password."
     },
     "table": {
         "users":"Users",

@@ -14,6 +14,8 @@ export const userStatsQuery = gql`
         avatar {
           url
         }
+        email
+        phone
         birthday
         gender
         prefferedPosition
@@ -25,6 +27,10 @@ export const userStatsQuery = gql`
         attendyTotal
         checkinRating
         commercialFrom
+      }
+      games {
+        id
+        placeId
       }
     }
   }

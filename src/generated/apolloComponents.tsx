@@ -430,10 +430,12 @@ export type UserStats = {
   attendGames?: Maybe<Scalars['Int']>;
   orgGames?: Maybe<Scalars['Int']>;
   user?: Maybe<UserProfile>;
+  games?: Maybe<Array<Maybe<Game>>>;
 };
 
 export type UserStatsFilter = {
   role?: Maybe<Array<Maybe<Scalars['String']>>>;
+  placeIds?: Maybe<Array<Maybe<Scalars['ID']>>>;
 };
 
 export type UserStatsList = {
@@ -1093,7 +1095,7 @@ export type FieldQuery = (
       & Pick<ShortGeoPoint, 'location'>
     )>, files?: Maybe<Array<Maybe<(
       { __typename?: 'File' }
-      & Pick<File, 'url'>
+      & Pick<File, 'id' | 'url'>
     )>>> }
   )> }
 );
@@ -1291,12 +1293,15 @@ export type UserStatsQuery = (
     & Pick<UserStats, 'userId' | 'attendGames' | 'orgGames'>
     & { user?: Maybe<(
       { __typename?: 'UserProfile' }
-      & Pick<UserProfile, 'id' | 'firstName' | 'lastName' | 'role' | 'birthday' | 'gender' | 'prefferedPosition' | 'bannedAt' | 'banReason' | 'ratingScore' | 'ratingTotal' | 'attendyScore' | 'attendyTotal' | 'checkinRating' | 'commercialFrom'>
+      & Pick<UserProfile, 'id' | 'firstName' | 'lastName' | 'role' | 'email' | 'phone' | 'birthday' | 'gender' | 'prefferedPosition' | 'bannedAt' | 'banReason' | 'ratingScore' | 'ratingTotal' | 'attendyScore' | 'attendyTotal' | 'checkinRating' | 'commercialFrom'>
       & { avatar?: Maybe<(
         { __typename?: 'File' }
         & Pick<File, 'url'>
       )> }
-    )> }
+    )>, games?: Maybe<Array<Maybe<(
+      { __typename?: 'Game' }
+      & Pick<Game, 'id' | 'placeId'>
+    )>>> }
   ) }
 );
 
@@ -1319,7 +1324,10 @@ export type UsersStatsQuery = (
           { __typename?: 'File' }
           & Pick<File, 'url'>
         )> }
-      )> }
+      )>, games?: Maybe<Array<Maybe<(
+        { __typename?: 'Game' }
+        & Pick<Game, 'userId'>
+      )>>> }
     )> }
   )> }
 );
@@ -1390,6 +1398,7 @@ export const FieldDocument = gql`
       location
     }
     files {
+      id
       url
     }
   }
@@ -1851,6 +1860,8 @@ export const UserStatsDocument = gql`
       avatar {
         url
       }
+      email
+      phone
       birthday
       gender
       prefferedPosition
@@ -1862,6 +1873,10 @@ export const UserStatsDocument = gql`
       attendyTotal
       checkinRating
       commercialFrom
+    }
+    games {
+      id
+      placeId
     }
   }
 }
@@ -1911,6 +1926,9 @@ export const UsersStatsDocument = gql`
         avatar {
           url
         }
+      }
+      games {
+        userId
       }
     }
   }

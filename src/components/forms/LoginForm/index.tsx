@@ -26,7 +26,11 @@ export const LoginForm = () => {
     try {
       await login(data);
     } catch (error) {
-      setServerError(error.message);
+      if (error.message == "Invalid email and/or password.") {
+        setServerError(t("error.wrongPasswordOrEmail"));
+      } else {
+        setServerError(error.message);
+      }
     }
   };
 

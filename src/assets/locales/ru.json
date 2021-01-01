@@ -41,10 +41,12 @@
             "prefferedPosition": "Позиция на поле",   
             "bannedAt": "Дата блокировки",
             "banReason": "Причина блокировки",
+            "bookings": "Бронирования",
             "ratingScore": "Оценка рейтинга",
             "ratingTotal": "Рейтинг",
             "attendyScore": "Оценка посещаемости",
             "attendyTotal": "Посещаемость",
+            "actions": "Действия",
             "checkinRating": "Проверка рейтинга",
             "commercialFrom": "Дата создания коммерческого аккаунта",
             "maleShort": "муж",
@@ -125,14 +127,15 @@
         "unban": "Разблокировать",
         "add": "Добавить",
         "role": {
-            "makeModerator": "Сделать модератором",
-            "makeManager": "Сделать менеджером",
-            "makeUser": "Сделать пользователем"
+            "makeModerator": "Назначить модератором",
+            "makeManager": "Назначить менеджером",
+            "makeUser": "Назначить пользователем"
         }
     },
     "error": {
         "required": "Обязательное поле",
-        "email": "Введен не корректный e-mail"
+        "email": "Введен не корректный e-mail",
+        "wrongPasswordOrEmail": "Неверный адрес электронной почты и / или пароль."
     },
     "table": {
         "users":"Пользователи",

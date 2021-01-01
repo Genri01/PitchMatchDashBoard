@@ -15,6 +15,7 @@ export const GamesContext = createContext<GamesContextInterface>(
 
 export const GamesContextProvider: FC = ({ children }) => {
   const { me } = useContext(UserContext);
+
   const { data, refetch } = useGamesQuery({
     variables: {
       filter: {

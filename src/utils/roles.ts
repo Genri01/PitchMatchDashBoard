@@ -42,6 +42,14 @@ export const ROLES = {
         u?.role && [MODERATOR, ADMIN].includes(u.role),
       email: (u: RolesUser) => u?.role && [MODERATOR, ADMIN].includes(u.role),
       phone: (u: RolesUser) => u?.role && [MODERATOR, ADMIN].includes(u.role),
+      hasBookings: (u: RolesUser) => u?.role && [MANAGER].includes(u.role),
+      secretInfo: (u: RolesUser, hasBookings: boolean) => {
+        if (!u?.role) return false;
+        if (MANAGER == u.role) {
+          return hasBookings;
+        }
+        return [MODERATOR, ADMIN].includes(u.role);
+      },
     },
     accesses: {
       makeModerator: (u: RolesUser) => u?.role && [ADMIN].includes(u.role),

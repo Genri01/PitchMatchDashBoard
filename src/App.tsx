@@ -14,6 +14,7 @@ import "react-leaflet-markercluster/dist/styles.min.css";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core";
 import { ruRU, enUS } from "@material-ui/core/locale";
 import { useTranslation } from "react-i18next";
+import { FieldsContextProvider } from "./contexts/FieldsContext";
 
 const link = createUploadLink({
   uri: process.env.REACT_APP_ENDPOINT,
@@ -43,9 +44,11 @@ function App() {
         <ApolloHooksProvider client={client}>
           <UserContextProvider>
             <GamesContextProvider>
-              <ThemeProvider theme={theme}>
-                <AppRoutes />
-              </ThemeProvider>
+              <FieldsContextProvider>
+                <ThemeProvider theme={theme}>
+                  <AppRoutes />
+                </ThemeProvider>
+              </FieldsContextProvider>
             </GamesContextProvider>
           </UserContextProvider>
         </ApolloHooksProvider>
@@ -55,15 +58,3 @@ function App() {
 }
 
 export default App;
-
-// ADMIN CREDENTIALS
-// {
-//   "credentials": {
-//     "login": "+76662223344",
-//     "password": "22222222"
-//   }
-// }
-
-// GENRI - MANAGER
-// "login": "+79284609803",
-// "password": "123qweasd"

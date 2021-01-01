@@ -31,7 +31,12 @@ const RoleActionsItem: FC<RoleActionsItemProps> = ({ id }) => {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
       <IconButton
         aria-label="more"
         aria-controls="long-menu"
@@ -113,7 +118,7 @@ export const AccessBox = () => {
         pageNum={pageNum}
         rowsPerPage={rowsPerPage}
         actionsOptions={{
-          columnTitle: "Actions",
+          columnTitle: t("user.fields.actions"),
           actionItem: (id: string) => <RoleActionsItem id={id} />,
         }}
       />

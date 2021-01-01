@@ -32,7 +32,6 @@ export const useUserCard = () => {
   };
 
   const toggleBan = async (user: User) => {
-    console.log("user", user);
     if (user.bannedAt) {
       await unban(user);
     } else {

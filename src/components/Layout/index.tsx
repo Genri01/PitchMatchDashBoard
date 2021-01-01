@@ -20,6 +20,7 @@ import {
 } from "@material-ui/core";
 import Badge from "@material-ui/core/Badge";
 import MenuIcon from "@material-ui/icons/Menu";
+import logo from "../../assets/images/logo-dashboard.png";
 
 import { useStyles } from "./styles";
 import { MenuItem, useMenuItems } from "../../constants";
@@ -71,7 +72,7 @@ export const Layout: FC = ({ children }) => {
         className={classes.logoTitle}
         color="primary"
       >
-        Pitch-match
+        <img src={logo} height="40px" />
       </Typography>
       <Divider />
       <List>

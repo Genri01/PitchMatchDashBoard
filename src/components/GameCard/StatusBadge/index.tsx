@@ -1,5 +1,6 @@
 import { Chip } from "@material-ui/core";
 import React, { FC } from "react";
+import i18next from "i18next";
 import { useStyles } from "./style";
 
 interface IProps {
@@ -27,13 +28,13 @@ export const getGameStatusBadgeColor = (status: string) => {
 export const getGameBadgeLabel = (status: string) => {
   switch (status) {
     case "new":
-      return "Новая";
+      return i18next.t("form.calendarFilter.new");
     case "cancelled":
-      return "Отмененная";
+      return i18next.t("form.calendarFilter.rejected");
     case "confirmed":
-      return "Подтвержденная";
+      return i18next.t("form.calendarFilter.confirmed");
     case "finished":
-      return "Закончена";
+      return i18next.t("form.calendarFilter.finished");
 
     default:
       return status;

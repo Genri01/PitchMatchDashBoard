@@ -92,6 +92,7 @@ export const useFieldsListBox = () => {
       label: t("field.fields.price"),
       filter: {
         type: "numberRange",
+        tip: "# - #",
       },
       valueGetter: (el: TablePlace) =>
         typeof el?.price == "number" ? el.price.toString() : "",

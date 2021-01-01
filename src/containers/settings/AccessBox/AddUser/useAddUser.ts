@@ -27,7 +27,6 @@ export const useAddUser = (onAdd?: Function) => {
   const [userSearch, setUserSearch] = useState("");
 
   const onSubmit = async (data: AddUserInput) => {
-    console.log("user", user);
     try {
       await updateRole(user!.id, data.role);
       setUser(null as any);

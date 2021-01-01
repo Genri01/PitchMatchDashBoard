@@ -14,6 +14,7 @@ export interface TableUser {
   profilePic: string;
   email: string;
   phone: string;
+  hasBookings: boolean;
 }
 
 export const useUsersListBox = () => {
@@ -92,6 +93,17 @@ export const useUsersListBox = () => {
           ? t("user.fields.femaleShort")
           : "",
       label: t("user.fields.gender"),
+    },
+    {
+      id: "hasBookings",
+      exportable: true,
+      filter: {
+        type: "select",
+        options: [t("shared.yes"), t("shared.no")],
+      },
+      valueGetter: (el: TableUser) =>
+        el.hasBookings ? t("shared.yes") : t("shared.no"),
+      label: t("user.fields.bookings"),
     },
   ];
 

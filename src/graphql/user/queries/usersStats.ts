@@ -20,6 +20,9 @@ export const usersStatsQuery = gql`
             url
           }
         }
+        games {
+          userId
+        }
       }
     }
   }

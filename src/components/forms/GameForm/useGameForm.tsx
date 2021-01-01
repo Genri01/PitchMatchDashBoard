@@ -53,8 +53,6 @@ export const useGameForm = () => {
     } catch (err) {
       if (err?.networkError?.result?.errors) {
         setServerError(err.networkError.result.errors);
-      } else {
-        console.log("err :>> ", err);
       }
     }
   };

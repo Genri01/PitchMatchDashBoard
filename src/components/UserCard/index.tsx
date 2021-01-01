@@ -14,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { useUserCard } from "./useUserCard";
 import { ROLES } from "../../utils";
 import { UserContext } from "../../contexts";
+import { FieldsContext } from "../../contexts/FieldsContext";
 
 interface ListItemProps {
   name: string;
@@ -59,6 +60,11 @@ export const UserCard: FC<IProps> = ({ data }: IProps) => {
   const imgUrl = data.user?.avatar?.url;
   const { user } = data;
   const { me } = useContext(UserContext);
+  const { fields } = useContext(FieldsContext);
+  const hasBookings = !!data?.games?.filter(
+    (el) => el?.placeId && fields.map((el) => el.id).includes(el.placeId)
+  ).length;
+
   const { toggleBan } = useUserCard();
 
   return (
@@ -101,8 +107,10 @@ export const UserCard: FC<IProps> = ({ data }: IProps) => {
                         >
                           <IconButton
                             aria-label="edit"
-                            color="secondary"
                             onClick={() => toggleBan(user as User)}
+                            style={{
+                              color: user.bannedAt ? "limegreen" : "#ff3066",
+                            }}
                           >
                             {user.bannedAt ? <RestoreIcon /> : <BlockIcon />}
                           </IconButton>
@@ -123,6 +131,28 @@ export const UserCard: FC<IProps> = ({ data }: IProps) => {
         />
 
         <UserListItem name="Id" value={user?.id || "-"} divider={true} />
+        {ROLES.shouldBeDisplayed.user.secretInfo(me, hasBookings) && (
+          <>
+            <UserListItem
+              name={t("user.fields.phoneNumber")}
+              value={user?.phone || "-"}
+              divider={true}
+            />
+            <UserListItem
+              name={t("user.fields.email")}
+              value={user?.email || "-"}
+              divider={true}
+            />
+            <UserListItem
+              name={t("user.fields.birthday")}
+              value={
+                user?.birthday ? new Date(user.birthday).toDateString() : "-"
+              }
+              divider={true}
+            />
+          </>
+        )}
+
         <UserListItem
           name={t("user.fields.attendGames")}
           value={data.attendGames?.toString() || "-"}
@@ -131,11 +161,6 @@ export const UserCard: FC<IProps> = ({ data }: IProps) => {
         <UserListItem
           name={t("user.fields.orgGames")}
           value={data.orgGames?.toString() || "-"}
-          divider={true}
-        />
-        <UserListItem
-          name={t("user.fields.birthday")}
-          value={user?.birthday ? new Date(user.birthday).toDateString() : "-"}
           divider={true}
         />
         <UserListItem

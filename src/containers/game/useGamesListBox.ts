@@ -48,7 +48,12 @@ export const useGamesListBox = () => {
       badgePropsExtractor: (el: TableGame) => ({ status: el.status }),
       filter: {
         type: "select",
-        options: ["Новая", "Отмененная", "Подтвержденная", "Закончена"],
+        options: [
+          t("form.calendarFilter.new"),
+          t("form.calendarFilter.rejected"),
+          t("form.calendarFilter.confirmed"),
+          t("form.calendarFilter.finished"),
+        ],
       },
       valueGetter: (el: TableGame) => getGameBadgeLabel(el.status || ""),
     },
@@ -70,8 +75,8 @@ export const useGamesListBox = () => {
       id: "startDate",
       exportable: true,
       label: t("game.fields.dateAndTime"),
-      filter: { type: "dateRange", tip: "yyyy/mm/dd-yyyy/mm/dd " },
       valueGetter: (el: TableGame) => el.startDate || "",
+      filter: { type: "dateRange", tip: "yyyy/mm/dd-yyyy/mm/dd " },
       minWidth: 200,
     },
   ];

@@ -18,6 +18,7 @@ export const FieldQuery = gql`
         location
       }
       files {
+        id
         url
       }
     }
