@@ -55,7 +55,8 @@
     },
     "form": {
         "addAccessUser": {
-            "title": "Add user"
+            "title": "Add user",
+            "fieldAddUser": "User Name"
         },
         "fieldForm": {
             "createTitle": "Create Field",

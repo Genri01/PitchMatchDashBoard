@@ -57,7 +57,7 @@ export const LoginForm = () => {
           label={t("form.login.login")}
           name="login"
           inputRef={register}
-          defaultValue="+79284609803"
+          defaultValue=""
           autoComplete="login"
           autoFocus
         />
@@ -68,7 +68,7 @@ export const LoginForm = () => {
           fullWidth
           name="password"
           inputRef={register}
-          defaultValue="123qweasd"
+          defaultValue=""
           label={t("form.login.password")}
           type="password"
           id="password"

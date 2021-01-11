@@ -55,7 +55,8 @@
     },
     "form": {
         "addAccessUser": {
-            "title": "Добавить пользователя"
+            "title": "Добавить пользователя",
+            "fieldAddUser": "Имя пользователя"
         },
         "fieldForm": {
             "createTitle": "Создать поле",

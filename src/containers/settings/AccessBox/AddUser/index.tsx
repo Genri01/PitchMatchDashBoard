@@ -59,7 +59,7 @@ export const AddUser: FC<IProps> = ({ onAdd }) => {
                   return (
                     <TextField
                       {...params}
-                      label={t("form.gameForm.fieldAndAddress")}
+                      label={t("form.addAccessUser.fieldAddUser")}
                       variant="outlined"
                       value={userSearch}
                       onChange={(e) => setUserSearch(e.target.value)}
