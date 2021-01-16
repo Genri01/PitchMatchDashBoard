@@ -11,6 +11,7 @@ import {
 import { Game, useGamesQuery } from "../../../generated/apolloComponents";
 import { UserContext } from "../../../contexts";
 import { ROLES } from "../../../utils";
+import { DEFAULT_PAGINATION } from "../../../constants";
 
 export const CalendarBox = () => {
   const classes = useStyles();
@@ -27,6 +28,7 @@ export const CalendarBox = () => {
         ...(statuses.length ? { status: statuses } : {}),
         ...(ROLES.isManager(me) ? { userId: me?.id } : {}),
       },
+      pagination: DEFAULT_PAGINATION
     },
     errorPolicy: "ignore",
   });

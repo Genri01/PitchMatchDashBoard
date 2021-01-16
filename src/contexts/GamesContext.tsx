@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { createContext, FC } from "react";
+import { DEFAULT_PAGINATION } from "../constants";
 import { Game, useGamesQuery } from "../generated/apolloComponents";
 import { ROLES } from "../utils";
 import { UserContext } from "./UserContext";
@@ -22,6 +23,7 @@ export const GamesContextProvider: FC = ({ children }) => {
         startDate: new Date().toString(),
         ...(ROLES.isManager(me) ? { userId: me?.id } : {}),
       },
+      pagination: DEFAULT_PAGINATION
     },
     errorPolicy: "ignore",
   });

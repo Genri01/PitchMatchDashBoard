@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { createContext, FC } from "react";
+import { DEFAULT_PAGINATION } from "../constants";
 import { Place, useFieldsQuery } from "../generated/apolloComponents";
 import { ROLES } from "../utils";
 import { UserContext } from "./UserContext";
@@ -17,7 +18,8 @@ export const FieldsContextProvider: FC = ({ children }) => {
   const { me } = useContext(UserContext);
 
   const { data, refetch } = useFieldsQuery({
-    variables: { filter: ROLES.isManager(me) ? { userId: me!.id } : {} },
+    variables: { filter: ROLES.isManager(me) ? { userId: me!.id } : {},
+                 pagination: DEFAULT_PAGINATION },
     errorPolicy: "ignore",
   });
 

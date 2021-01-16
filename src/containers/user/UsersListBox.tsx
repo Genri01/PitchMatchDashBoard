@@ -10,6 +10,7 @@ import {
 } from "../../generated/apolloComponents";
 import { ROLES } from "../../utils";
 import { TableUser, useUsersListBox } from "./useUsersListBox";
+import { DEFAULT_PAGINATION } from "../../constants";
 
 export const UsersListBox = () => {
   const { pageNum, rowsPerPage } = useTableLocationParams();
@@ -18,7 +19,8 @@ export const UsersListBox = () => {
   const { me } = useContext(UserContext);
 
   const { data: fieldsData } = useFieldsQuery({
-    variables: { filter: ROLES.isManager(me) ? { userId: me!.id } : {} },
+    variables: { filter: ROLES.isManager(me) ? { userId: me!.id } : {},
+                 pagination: DEFAULT_PAGINATION },
     errorPolicy: "ignore",
   });
   const placeIds = (fieldsData?.getPlaces?.rows
@@ -30,6 +32,7 @@ export const UsersListBox = () => {
       filter: {
         ...(ROLES.isManager(me) ? { placeIds } : {}),
       },
+      pagination: DEFAULT_PAGINATION
     },
   });
 

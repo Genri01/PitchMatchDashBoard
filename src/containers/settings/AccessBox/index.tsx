@@ -11,6 +11,7 @@ import { AccessTableUser, useAccessBox } from "./useAccessTable";
 import { ROLES } from "../../../utils";
 import { UserContext } from "../../../contexts";
 import { AddUser } from "./AddUser";
+import { DEFAULT_PAGINATION } from "../../../constants";
 
 interface RoleActionsItemProps {
   id: string;
@@ -97,6 +98,7 @@ export const AccessBox = () => {
   const { data, refetch } = useUsersStatsQuery({
     variables: {
       filter: { role: [ROLES.ADMIN, ROLES.MODERATOR, ROLES.MANAGER] },
+      pagination: DEFAULT_PAGINATION
     },
   });
   const users = data?.getUsersStats?.rows.map(({ user, ...el }) => ({

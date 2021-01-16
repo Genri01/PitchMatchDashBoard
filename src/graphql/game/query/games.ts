@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
 export const gamesQuery = gql`
-  query Games($filter: GameFilter!) {
-    getGames(filter: $filter) {
+  query Games($filter: GameFilter!, $pagination: Pagination) {
+    getGames(filter: $filter, pagination: $pagination) {
       count
       rows {
         id

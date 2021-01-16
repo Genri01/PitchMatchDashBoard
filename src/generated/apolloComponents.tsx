@@ -1175,6 +1175,7 @@ export type GameQuery = (
 
 export type GamesQueryVariables = Exact<{
   filter: GameFilter;
+  pagination?: Maybe<Pagination>;
 }>;
 
 
@@ -1307,6 +1308,7 @@ export type UserStatsQuery = (
 
 export type UsersStatsQueryVariables = Exact<{
   filter?: Maybe<UserStatsFilter>;
+  pagination?: Maybe<Pagination>;
 }>;
 
 
@@ -1602,8 +1604,8 @@ export type GameQueryHookResult = ReturnType<typeof useGameQuery>;
 export type GameLazyQueryHookResult = ReturnType<typeof useGameLazyQuery>;
 export type GameQueryResult = Apollo.QueryResult<GameQuery, GameQueryVariables>;
 export const GamesDocument = gql`
-    query Games($filter: GameFilter!) {
-  getGames(filter: $filter) {
+    query Games($filter: GameFilter!, $pagination: Pagination) {
+  getGames(filter: $filter, pagination: $pagination) {
     count
     rows {
       id
@@ -1636,6 +1638,7 @@ export const GamesDocument = gql`
  * const { data, loading, error } = useGamesQuery({
  *   variables: {
  *      filter: // value for 'filter'
+ *      pagination: // value for 'pagination'
  *   },
  * });
  */
@@ -1908,8 +1911,8 @@ export type UserStatsQueryHookResult = ReturnType<typeof useUserStatsQuery>;
 export type UserStatsLazyQueryHookResult = ReturnType<typeof useUserStatsLazyQuery>;
 export type UserStatsQueryResult = Apollo.QueryResult<UserStatsQuery, UserStatsQueryVariables>;
 export const UsersStatsDocument = gql`
-    query UsersStats($filter: UserStatsFilter) {
-  getUsersStats(filter: $filter) {
+    query UsersStats($filter: UserStatsFilter, $pagination: Pagination) {
+  getUsersStats(filter: $filter, pagination: $pagination) {
     rows {
       userId
       attendGames
@@ -1948,6 +1951,7 @@ export const UsersStatsDocument = gql`
  * const { data, loading, error } = useUsersStatsQuery({
  *   variables: {
  *      filter: // value for 'filter'
+ *      pagination: // value for 'pagination'
  *   },
  * });
  */

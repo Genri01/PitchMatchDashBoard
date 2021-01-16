@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { HeadCell } from "../../../components";
+import { DEFAULT_PAGINATION } from "../../../constants";
 import { UserContext } from "../../../contexts/UserContext";
 import { Place, useFieldsQuery } from "../../../generated/apolloComponents";
 import { ROLES } from "../../../utils";
@@ -22,7 +23,8 @@ export const useFieldsListBox = () => {
   const { t } = useTranslation();
   const { me } = useContext(UserContext);
   const { data } = useFieldsQuery({
-    variables: { filter: ROLES.isManager(me) ? { userId: me!.id } : {} },
+    variables: { filter: ROLES.isManager(me) ? { userId: me!.id } : {},
+                 pagination: DEFAULT_PAGINATION },
     errorPolicy: "ignore",
   });
   const dataRows = (data?.getPlaces?.rows || []) as Place[];

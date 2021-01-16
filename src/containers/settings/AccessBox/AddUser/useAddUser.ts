@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
+import { DEFAULT_PAGINATION } from "../../../../constants";
 import { UserContext } from "../../../../contexts";
 import {
   UserProfile,
@@ -19,7 +20,9 @@ export const useAddUser = (onAdd?: Function) => {
   const { me } = useContext(UserContext);
   const availableRoles = ROLES.getSubRoles(me);
   const { data } = useUsersStatsQuery({
-    variables: { filter: { role: [ROLES.USER] } },
+    variables: { filter: { role: [ROLES.USER] },
+                 pagination: DEFAULT_PAGINATION
+  },
   });
   const users = data?.getUsersStats?.rows.map((el) => el.user) || [];
 
