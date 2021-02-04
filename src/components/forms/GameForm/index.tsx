@@ -121,7 +121,7 @@ export const GameForm = () => {
                 label={t("form.gameForm.sex")}
                 className={classes.field}
                 options={[
-                  { id: "", label: t("form.gameForm.any") },
+                  { id: "a", label: t("form.gameForm.any") },
                   { id: "m", label: t("form.gameForm.male") },
                   { id: "f", label: t("form.gameForm.female") },
                 ]}
