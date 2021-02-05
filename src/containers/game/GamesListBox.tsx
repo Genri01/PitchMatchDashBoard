@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+// import { format } from "date-fns";
 
 import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -17,7 +17,8 @@ export const GamesListBox = () => {
     ...el,
     userName: `${el?.user?.firstName || ""} ${el?.user?.lastName || ""}`,
     startDate: el?.startDate
-      ? format(new Date(el.startDate), "yyyy-MM-dd hh:mm")
+      //? format(new Date(el.startDate), "yyyy-MM-dd hh:mm")
+      ? new Date(el.startDate).toISOString().replace(/-/g,"/").replace(/[TZ]/g," ").replace(/000/, " ")
       : "-",
   })) as TableGame[];
 

@@ -13,7 +13,6 @@ import { Box, Paper, Tooltip } from "@material-ui/core";
 
 import { Game } from "../../generated/apolloComponents";
 import { useStyles } from "./style";
-import { format } from "date-fns";
 import { useGameCard } from "./useGameCard";
 import { StatusBadge } from "./StatusBadge";
 import { useTranslation } from "react-i18next";
@@ -112,9 +111,10 @@ export const GameCard: FC<IProps> = ({ data }: IProps) => {
         />
         <GameListItem
           name={t("game.fields.dateAndTime")}
+
           value={
             data?.startDate
-              ? format(new Date(data.startDate), "yyyy-MM-dd hh:mm")
+              ? new Date(data.startDate).toISOString().replace(/-/g,"/").replace(/[TZ]/g," ").replace(/000/, " ")
               : "-"
           }
           divider={true}
