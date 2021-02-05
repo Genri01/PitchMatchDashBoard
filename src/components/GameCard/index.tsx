@@ -16,6 +16,7 @@ import { useStyles } from "./style";
 import { useGameCard } from "./useGameCard";
 import { StatusBadge } from "./StatusBadge";
 import { useTranslation } from "react-i18next";
+import { formatDate } from "../../constants";
 
 interface ListItemProps {
   name: string;
@@ -114,7 +115,7 @@ export const GameCard: FC<IProps> = ({ data }: IProps) => {
 
           value={
             data?.startDate
-              ? new Date(data.startDate).toISOString().replace(/-/g,"/").replace(/[TZ]/g," ").replace(/000/, " ")
+              ? formatDate(data.startDate)
               : "-"
           }
           divider={true}

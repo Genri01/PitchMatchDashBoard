@@ -10,6 +10,7 @@ import React, { FC } from "react";
 
 import { Link } from "react-router-dom";
 import Popup from "reactjs-popup";
+import { formatDate } from "../../../constants";
 
 import { Game } from "../../../generated/apolloComponents";
 
@@ -41,6 +42,9 @@ export const CalendarEventPopup: FC = (eventInfo: any) => {
             </Typography>
             <Typography color="textSecondary" style={{}}>
               {i18next.t("game.fields.price")}: {game?.price || "-"}
+            </Typography>
+            <Typography color="textSecondary" style={{}}>
+              {i18next.t("game.fields.dateAndTime")}: { formatDate(game?.startDate)}
             </Typography>
 
             <Typography

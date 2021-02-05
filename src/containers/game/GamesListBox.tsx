@@ -6,6 +6,7 @@ import { Table } from "../../components";
 import { useTableLocationParams } from "../../components/Table/useTableLocationParams";
 import { GamesContext } from "../../contexts";
 import { TableGame, useGamesListBox } from "./useGamesListBox";
+import { formatDate } from "../../constants";
 
 export const GamesListBox = () => {
   const { pageNum, rowsPerPage } = useTableLocationParams();
@@ -17,8 +18,7 @@ export const GamesListBox = () => {
     ...el,
     userName: `${el?.user?.firstName || ""} ${el?.user?.lastName || ""}`,
     startDate: el?.startDate
-      //? format(new Date(el.startDate), "yyyy-MM-dd hh:mm")
-      ? new Date(el.startDate).toISOString().replace(/-/g,"/").replace(/[TZ]/g," ").replace(/000/, " ")
+      ? formatDate(el.startDate)
       : "-",
   })) as TableGame[];
 
